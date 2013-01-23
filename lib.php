@@ -83,12 +83,13 @@ class repository_rackspace_cloud_files extends repository {
 	public static function type_config_form($mform, $classname = 'repository') {
         parent::type_config_form($mform);
         $strrequired = get_string('required');
-		$ah = $mform->addElement('select', 'auth_host', get_string('auth_host'), array(get_string('US_AUTHURL'), get_string('UK_AUTHURL')));
+		$ah = $mform->addElement('select', 'auth_host', get_string('auth_host','repository_rackspace_cloud_files'), array(get_string('US_AUTHURL','repository_rackspace_cloud_files'), get_string('UK_AUTHURL','repository_rackspace_cloud_files')));
 		$ah->setMultiple(false);
-		$ah->setSelected(get_string('US_AUTHURL'));
+		$ah->setSelected(get_string('US_AUTHURL','repository_rackspace_cloud_files'));
         $mform->addElement('text', 'username', get_string('username', 'repository_rackspace_cloud_files'));
         $mform->addElement('text', 'api_key', get_string('api_key', 'repository_rackspace_cloud_files'));
         $mform->addElement('static', 'instructions', '', get_string('instruct', 'repository_rackspace_cloud_files'));
+        $mform->addRule('auth_host', $strrequired, 'required', null, 'client');
         $mform->addRule('username', $strrequired, 'required', null, 'client');
         $mform->addRule('api_key', $strrequired, 'required', null, 'client');
     }
