@@ -22,7 +22,9 @@
  * @copyright  2010 Dongsheng Cai {@link http://dongsheng.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once($CFG->dirroot . '/repository/lib.php');
+require_once($CFG->dirroot . '/repository/lib.php'); //Includes the CloudFiles PHP API.. Ensure the API files are located in your Global includes folder or in the same directory
+require_once('cloudfiles.php');
+
 
 /**
  * repository_youtube class
@@ -92,6 +94,7 @@ class repository_rackspace_cloud_files extends repository {
 		//$v = $mform->addElement('select', 'version', get_string('version','repository_rackspace_cloud_files'), array(get_string('v1','repository_rackspace_cloud_files'), get_string('v2','repository_rackspace_cloud_files')));
 		//$v->setMultiple(false);
 		//$v->setSelected(get_string('v1','repository_rackspace_cloud_files'));
+		$mform->addElement('static','spacer','','');
 		$mform->addElement('static','auth_error','','');
         $mform->addElement('text', 'username', get_string('username', 'repository_rackspace_cloud_files'));
         $mform->addElement('text', 'api_key', get_string('api_key', 'repository_rackspace_cloud_files'));
@@ -104,8 +107,14 @@ class repository_rackspace_cloud_files extends repository {
 	
 	public static function type_form_validation($mform, $data, $errors) {
 		if (!ctype_alnum($data['api_key']) || !is_numeric('0x'.$data['api_key'])) {
-			$errors['auth_error'] = get_string('invalid_api_key', 'repository_rackspace_cloud_files');
+			$errors['api_key'] = get_string('invalid_api_key', 'repository_rackspace_cloud_files');
 		}
+		//Now lets create a new instance of the authentication Class.
+		$auth = new CF_Authentication('privateclouddevs','0e688a460988337e0e759524a2ccfc33');
+		//Calling the Authenticate method returns a valid storage token and allows you to connect to the CloudFiles Platform.
+		$status = $auth->authenticate();
+		$errors['auth_error'] = get_string('auth_error', 'repository_rackspace_cloud_files').' '.status;
+		
 		return $errors;
 	}
 
