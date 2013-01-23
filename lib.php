@@ -92,7 +92,7 @@ class repository_rackspace_cloud_files extends repository {
 		//$v = $mform->addElement('select', 'version', get_string('version','repository_rackspace_cloud_files'), array(get_string('v1','repository_rackspace_cloud_files'), get_string('v2','repository_rackspace_cloud_files')));
 		//$v->setMultiple(false);
 		//$v->setSelected(get_string('v1','repository_rackspace_cloud_files'));
-		$mform->addElement('text','auth_error','');
+		$mform->addElement('static','auth_error','','');
         $mform->addElement('text', 'username', get_string('username', 'repository_rackspace_cloud_files'));
         $mform->addElement('text', 'api_key', get_string('api_key', 'repository_rackspace_cloud_files'));
         $mform->addElement('static', 'instructions', '', get_string('instruct', 'repository_rackspace_cloud_files'));
