@@ -24,10 +24,11 @@
 
 $string['configplugin'] = 'Rackspace Cloud Files configuration';
 $string['pluginname'] = 'Rackspace Cloud Files';
+$string['US_AUTHURL'] = 'https://identity.api.rackspacecloud.com';
+$string['UK_AUTHURL'] = ' https://lon.identity.api.rackspacecloud.com';
 $string['username'] = 'Username';
 $string['api_key'] = 'API Key';
 $string['search'] = 'This is a string';
-$string['instruct_label'] = '';
 $string['instruct'] = 'You can get your <b>API Key</b> from your <a href="http://mycloud.rackspace.com">Rackspace Cloud Control Panel</a>.<br /> - Expand the drop-down menu at the top right where your username is.<br /> -  Click "API Keys" and finally click "Show Key"';
 $string['cdn'] = 'CDN (Content Delivery Network)';
 $string['cdn_info'] = 'CDN will cache files on servers closer to your users resulting in faster downloads of large files.';
