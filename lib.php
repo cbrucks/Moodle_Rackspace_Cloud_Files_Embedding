@@ -111,14 +111,16 @@ class repository_rackspace_cloud_files extends repository {
 		}
 		else
 		{
-			try
-			{
-				//Now lets create a new instance of the authentication Class.
-				$auth = new CF_Authentication($data['username'], $data['api_key']);
+			//Now lets create a new instance of the authentication Class.
+			$auth = new CF_Authentication($data['username'], $data['api_key']);
+			try {
+				$transaction = $DB->start_delegated_transaction();
 				//Calling the Authenticate method returns a valid storage token and allows you to connect to the CloudFiles Platform.
 				$status = $auth->authenticate();
+				$transaction->allow_commit();
 			} catch (InvalidResponseException $e) {
 				$errors['auth_error'] = get_string('auth_error', 'repository_rackspace_cloud_files').' '.$status;
+				$transation->rollback($e);
 			}
 		}
 		
