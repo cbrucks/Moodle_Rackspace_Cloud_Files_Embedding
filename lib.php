@@ -85,7 +85,7 @@ class repository_rackspace_cloud_files extends repository {
         $strrequired = get_string('required');
         $mform->addElement('text', 'username', get_string('username', 'repository_rackspace_cloud_files'));
         $mform->addElement('text', 'api_key', get_string('api_key', 'repository_rackspace_cloud_files'));
-        $mform->addElement('instructions');
+        $mform->addElement('html', get_string('instructions', 'repository_rackspace_cloud_files'));
         $mform->addRule('username', $strrequired, 'required', null, 'client');
         $mform->addRule('api_key', $strrequired, 'required', null, 'client');
     }
