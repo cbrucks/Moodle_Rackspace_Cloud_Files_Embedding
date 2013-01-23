@@ -119,6 +119,14 @@ class repository_rackspace_cloud_files extends repository {
 			try {
 				//Calling the Authenticate method returns a valid storage token and allows you to connect to the CloudFiles Platform.
 				$status = $auth->authenticate();
+				//The Connection Class Allows us to connect to CloudFiles and make changes to containers; Create, Delete, Return existing conta$
+				$conn = new CF_Connection($auth);
+				//$containers = $conn->list_containers();
+				//foreach ($containers as $container) {
+				//	if $container->name == $data[''];
+				//}
+				$errors['auth_error'] = $data;
+
 			} catch (Exception $e) {
 				$errors['auth_error'] = get_string('auth_error', 'repository_rackspace_cloud_files').'<br />"'.$e->getMessage().'"';
 			}
@@ -140,6 +148,6 @@ class repository_rackspace_cloud_files extends repository {
      * @return int
      */
     public function supported_returntypes() {
-        return FILE_EXTERNAL;
+        return FILE_EXTERNAL|FILE_REFERENCE;
     }
 }
