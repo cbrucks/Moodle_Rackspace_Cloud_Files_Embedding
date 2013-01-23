@@ -76,17 +76,8 @@ class repository_rackspace_cloud_files extends repository {
      * Generate search form
      */
     public function print_login($ajax = true) {
-        $ret = array();
-        $search = new stdClass();
-        $search->type = 'text';
-        $search->id   = 'youtube_search';
-        $search->name = 's';
-        $search->label = get_string('search', 'repository_rackspace_cloud_files').': ';
-        $ret['login'] = array($search, $sort);
-        $ret['login_btn_label'] = get_string('search');
-        $ret['login_btn_action'] = 'search';
-        $ret['allowcaching'] = true; // indicates that login form can be cached in filepicker.js
-        return $ret;
+	    // This is where the user interaction happens
+        
     }
 	
 	public static function type_config_form($mform, $classname = 'repository') {
@@ -94,7 +85,7 @@ class repository_rackspace_cloud_files extends repository {
         $strrequired = get_string('required');
         $mform->addElement('text', 'username', get_string('username', 'repository_rackspace_cloud_files'));
         $mform->addElement('text', 'api_key', get_string('api_key', 'repository_rackspace_cloud_files'));
-        $mform->addElement('text', 'instructions', get_string('instructions', 'repository_rackspace_cloud_files'));
+        $mform->addElement('text', 'instructions');
         $mform->addRule('username', $strrequired, 'required', null, 'client');
         $mform->addRule('api_key', $strrequired, 'required', null, 'client');
     }
