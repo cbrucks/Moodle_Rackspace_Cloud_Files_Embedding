@@ -109,11 +109,14 @@ class repository_rackspace_cloud_files extends repository {
 		if (!ctype_alnum($data['api_key']) || !is_numeric('0x'.$data['api_key'])) {
 			$errors['api_key'] = get_string('invalid_api_key', 'repository_rackspace_cloud_files');
 		}
-		//Now lets create a new instance of the authentication Class.
-		$auth = new CF_Authentication('privateclouddevs','0e688a460988337e0e759524a2ccfc33');
-		//Calling the Authenticate method returns a valid storage token and allows you to connect to the CloudFiles Platform.
-		$status = $auth->authenticate();
-		$errors['auth_error'] = get_string('auth_error', 'repository_rackspace_cloud_files').' '.$status;
+		else
+		{
+			//Now lets create a new instance of the authentication Class.
+			$auth = new CF_Authentication($data['username'], $data['api_key']);
+			//Calling the Authenticate method returns a valid storage token and allows you to connect to the CloudFiles Platform.
+			$status = $auth->authenticate();
+			$errors['auth_error'] = get_string('auth_error', 'repository_rackspace_cloud_files').' '.$status;
+		}
 		
 		return $errors;
 	}
