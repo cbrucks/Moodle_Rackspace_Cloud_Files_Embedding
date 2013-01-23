@@ -83,17 +83,18 @@ class repository_rackspace_cloud_files extends repository {
 	public static function type_config_form($mform, $classname = 'repository') {
         parent::type_config_form($mform);
         $strrequired = get_string('required');
-		$ah = $mform->addElement('select', 'auth_host', get_string('auth_host','repository_rackspace_cloud_files'), array(get_string('US','repository_rackspace_cloud_files'), get_string('UK','repository_rackspace_cloud_files')));
-		$ah->setMultiple(false);
-		$ah->setSelected(get_string('US','repository_rackspace_cloud_files'));
-        $strrequired = get_string('required');
-		$v = $mform->addElement('select', 'version', get_string('version','repository_rackspace_cloud_files'), array(get_string('v1','repository_rackspace_cloud_files'), get_string('v2','repository_rackspace_cloud_files')));
-		$v->setMultiple(false);
-		$v->setSelected(get_string('v1','repository_rackspace_cloud_files'));
+		//$ah = $mform->addElement('select', 'auth_host', get_string('auth_host','repository_rackspace_cloud_files'), array(get_string('US','repository_rackspace_cloud_files'), get_string('UK','repository_rackspace_cloud_files')));
+		//$ah->setMultiple(false);
+		//$ah->setSelected(get_string('US','repository_rackspace_cloud_files'));
+        //$strrequired = get_string('required');
+		//$v = $mform->addElement('select', 'version', get_string('version','repository_rackspace_cloud_files'), array(get_string('v1','repository_rackspace_cloud_files'), get_string('v2','repository_rackspace_cloud_files')));
+		//$v->setMultiple(false);
+		//$v->setSelected(get_string('v1','repository_rackspace_cloud_files'));
         $mform->addElement('text', 'username', get_string('username', 'repository_rackspace_cloud_files'));
         $mform->addElement('text', 'api_key', get_string('api_key', 'repository_rackspace_cloud_files'));
         $mform->addElement('static', 'instructions', '', get_string('instruct', 'repository_rackspace_cloud_files'));
-        $mform->addRule('auth_host', $strrequired, 'required', null, 'client');
+        //$mform->addRule('auth_host', $strrequired, 'required', null, 'client');
+        //$mform->addRule('version', $strrequired, 'required', null, 'client');
         $mform->addRule('username', $strrequired, 'required', null, 'client');
         $mform->addRule('api_key', $strrequired, 'required', null, 'client');
     }
