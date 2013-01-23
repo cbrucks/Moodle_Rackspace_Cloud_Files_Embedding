@@ -24,8 +24,9 @@
 
 $string['configplugin'] = 'Rackspace Cloud Files configuration';
 $string['pluginname'] = 'Rackspace Cloud Files';
-$string['US_AUTHURL'] = 'https://identity.api.rackspacecloud.com';
-$string['UK_AUTHURL'] = ' https://lon.identity.api.rackspacecloud.com';
+$string['US'] = 'United States';
+$string['UK'] = 'United Kingdom';
+$string['auth_host'] = 'Hosting Location';
 $string['username'] = 'Username';
 $string['api_key'] = 'API Key';
 $string['search'] = 'This is a string';
