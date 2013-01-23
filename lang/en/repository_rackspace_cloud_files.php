@@ -24,12 +24,27 @@
 
 $string['configplugin'] = 'Rackspace Cloud Files configuration';
 $string['pluginname'] = 'Rackspace Cloud Files';
+
+/*
+ * Admin Plugin Setup Form Strings
+ */
+$string['auth_host'] = 'Hosting Location';
 $string['US'] = 'United States';
 $string['UK'] = 'United Kingdom';
-$string['auth_host'] = 'Hosting Location';
+
+$string['version'] = 'Version #';
+$string['v1'] = 'v1';
+$string['v2'] = 'v2';
+
 $string['username'] = 'Username';
+
 $string['api_key'] = 'API Key';
-$string['search'] = 'This is a string';
+
 $string['instruct'] = 'You can get your <b>API Key</b> from your <a href="http://mycloud.rackspace.com">Rackspace Cloud Control Panel</a>.<br /> - Expand the drop-down menu at the top right where your username is.<br /> -  Click "API Keys" and finally click "Show Key"';
+
+/*
+ * 
+ */
+$string['search'] = 'This is a string';
 $string['cdn'] = 'CDN (Content Delivery Network)';
 $string['cdn_info'] = 'CDN will cache files on servers closer to your users resulting in faster downloads of large files.';
