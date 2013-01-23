@@ -54,9 +54,9 @@ public class repository_rackspace_cloud_files extends repository {
         $search->type = 'text';
         $search->id   = 'youtube_search';
         $search->name = 's';
-        $search->label = get_string('search', 'repository_youtube').': ';
+        $search->label = get_string('search', 'repository_rackspace_cloud_files').': ';
         $ret['login'] = array($search);
-        $ret['login_btn_label'] = get_string('search');
+        $ret['login_btn_label'] = get_string('search', 'repository_rackspace_cloud_files');
         $ret['login_btn_action'] = 'search';
         $ret['allowcaching'] = true; // indicates that login form can be cached in filepicker.js
         return $ret;
