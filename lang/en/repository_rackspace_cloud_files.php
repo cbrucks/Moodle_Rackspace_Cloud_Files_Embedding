@@ -44,7 +44,7 @@ $string['invalid_api_key'] = 'Invalid API Key!<br />Only hex values are acceptab
 
 $string['instruct'] = 'You can get your <b>API Key</b> from your <a href="http://mycloud.rackspace.com">Rackspace Cloud Control Panel</a>.<br /> - Expand the drop-down menu at the top right where your username is.<br /> -  Click "API Keys" and finally click "Show Key"';
 
-$string['auth_error'] = 'Authentication unsuccessful.<br />Check your username and password.';
+$string['auth_error'] = 'Authentication unsuccessful!';
 
 /*
  * 
