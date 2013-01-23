@@ -120,7 +120,7 @@ class repository_rackspace_cloud_files extends repository {
 				//Calling the Authenticate method returns a valid storage token and allows you to connect to the CloudFiles Platform.
 				$status = $auth->authenticate();
 			} catch (Exception $e) {
-				$errors['auth_error'] = get_string('auth_error', 'repository_rackspace_cloud_files').' '.$status;
+				$errors['auth_error'] = get_string('auth_error', 'repository_rackspace_cloud_files').'<br />'.$e;
 			}
 		}
 		
