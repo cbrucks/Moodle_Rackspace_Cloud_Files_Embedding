@@ -31,7 +31,16 @@ public class repository_rackspace_cloud_files extends repository {
     function __constuct($repositoryid, $context = SYSCONTEXTID, $options = array()) {
 	    parent::__contstruct($repositoryid, $context, $options);
 	}
-
+	
+	
+    /**
+     * Youtube plugin doesn't support global search
+     */
+    public function global_search() {
+        return false;
+    }
+	
+	
     function get_listing() {
         return array('list' => array());
     }
@@ -46,30 +55,7 @@ public class repository_rackspace_cloud_files extends repository {
         $search->id   = 'youtube_search';
         $search->name = 's';
         $search->label = get_string('search', 'repository_youtube').': ';
-        $sort = new stdClass();
-        $sort->type = 'select';
-        $sort->options = array(
-            (object)array(
-                'value' => 'relevance',
-                'label' => get_string('sortrelevance', 'repository_youtube')
-            ),
-            (object)array(
-                'value' => 'published',
-                'label' => get_string('sortpublished', 'repository_youtube')
-            ),
-            (object)array(
-                'value' => 'rating',
-                'label' => get_string('sortrating', 'repository_youtube')
-            ),
-            (object)array(
-                'value' => 'viewCount',
-                'label' => get_string('sortviewcount', 'repository_youtube')
-            )
-        );
-        $sort->id = 'youtube_sort';
-        $sort->name = 'youtube_sort';
-        $sort->label = get_string('sortby', 'repository_youtube').': ';
-        $ret['login'] = array($search, $sort);
+        $ret['login'] = array($search);
         $ret['login_btn_label'] = get_string('search');
         $ret['login_btn_action'] = 'search';
         $ret['allowcaching'] = true; // indicates that login form can be cached in filepicker.js
