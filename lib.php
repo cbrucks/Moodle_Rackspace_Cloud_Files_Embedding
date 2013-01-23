@@ -48,24 +48,12 @@ class repository_rackspace_cloud_files extends repository {
         $this->secret_key = get_config('s3', 'secret_key');
     }
 
-    public function check_login() {
-        return true;
-    }
-
     /**
      * Return search results
      * @param string $search_text
      * @return array
      */
     public function search($search_text, $page = 0) {
-    }
-
-
-    /**
-     * Youtube plugin doesn't support global search
-     */
-    public function global_search() {
-        return false;
     }
 
     public function get_listing($path='', $page = '') {
@@ -79,6 +67,21 @@ class repository_rackspace_cloud_files extends repository {
 	    // This is where the user interaction happens
         
     }
+
+    public function check_login() {
+        return true;
+    }
+	
+    /**
+     * Youtube plugin doesn't support global search
+     */
+    public function global_search() {
+        return false;
+    }
+	
+    public static function get_type_option_names() {
+        return array('username', 'api_key', 'pluginname');
+    }
 	
 	public static function type_config_form($mform, $classname = 'repository') {
         parent::type_config_form($mform);
@@ -86,7 +89,6 @@ class repository_rackspace_cloud_files extends repository {
 		//$ah = $mform->addElement('select', 'auth_host', get_string('auth_host','repository_rackspace_cloud_files'), array(get_string('US','repository_rackspace_cloud_files'), get_string('UK','repository_rackspace_cloud_files')));
 		//$ah->setMultiple(false);
 		//$ah->setSelected(get_string('US','repository_rackspace_cloud_files'));
-        //$strrequired = get_string('required');
 		//$v = $mform->addElement('select', 'version', get_string('version','repository_rackspace_cloud_files'), array(get_string('v1','repository_rackspace_cloud_files'), get_string('v2','repository_rackspace_cloud_files')));
 		//$v->setMultiple(false);
 		//$v->setSelected(get_string('v1','repository_rackspace_cloud_files'));
@@ -98,6 +100,13 @@ class repository_rackspace_cloud_files extends repository {
         $mform->addRule('username', $strrequired, 'required', null, 'client');
         $mform->addRule('api_key', $strrequired, 'required', null, 'client');
     }
+	
+	public static function type_form_validation($mform, $data, $errors) {
+		if (!ctype_alnum($data['api_key']) || !is_numeric('0x'.$data['api_key'])) {
+			$errors['api_key'] = get_string('invalid_api_key', 'repository_rackspace_cloud_files');
+		}
+		return $errors;
+	}
 
     /**
      * file types supported by youtube plugin

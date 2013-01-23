@@ -39,6 +39,7 @@ $string['v2'] = 'v2';
 $string['username'] = 'Username';
 
 $string['api_key'] = 'API Key';
+$string['invalid_api_key'] = 'Invalid API Key (Only hex values are acceptable; 0-9 a-f A-F).';
 
 $string['instruct'] = 'You can get your <b>API Key</b> from your <a href="http://mycloud.rackspace.com">Rackspace Cloud Control Panel</a>.<br /> - Expand the drop-down menu at the top right where your username is.<br /> -  Click "API Keys" and finally click "Show Key"';
 
