@@ -15,37 +15,61 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This plugin is used to access rackspace cloud files
+ * This plugin is used to access youtube videos
  *
  * @since 2.0
- * @package    repository_rackspace_cloud_files
- * @copyright  2013 Chris Brucks
+ * @package    repository_youtube
+ * @copyright  2010 Dongsheng Cai {@link http://dongsheng.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once($CFG->dirroot . '/repository/lib.php');
-require_once($CFG->dirroot . '/repository/cf.php');
+
+/**
+ * repository_youtube class
+ *
+ * @since 2.0
+ * @package    repository_youtube
+ * @copyright  2009 Dongsheng Cai {@link http://dongsheng.org}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+class repository_rackspace_cloud_files extends repository {
+
+    /**
+     * Youtube plugin constructor
+     * @param int $repositoryid
+     * @param object $context
+     * @param array $options
+     */
+    public function __construct($repositoryid, $context = SYSCONTEXTID, $options = array()) {
+        parent::__construct($repositoryid, $context, $options);
+    }
+
+    public function check_login() {
+        return true;
+    }
+
+    /**
+     * Return search results
+     * @param string $search_text
+     * @return array
+     */
+    public function search($search_text, $page = 0) {
+    }
 
 
-public class repository_rackspace_cloud_files extends repository {
-
-    function __constuct($repositoryid, $context = SYSCONTEXTID, $options = array()) {
-	    parent::__contstruct($repositoryid, $context, $options);
-	}
-	
-	
     /**
      * Youtube plugin doesn't support global search
      */
     public function global_search() {
         return false;
     }
-	
-	
-    function get_listing() {
-        return array('list' => array());
+
+    public function get_listing($path='', $page = '') {
+        return array();
     }
-	
-	/**
+
+    /**
      * Generate search form
      */
     public function print_login($ajax = true) {
@@ -54,22 +78,24 @@ public class repository_rackspace_cloud_files extends repository {
         $search->type = 'text';
         $search->id   = 'youtube_search';
         $search->name = 's';
-        $ret['login'] = array($search);
+        $search->label = get_string('search', 'repository_rackspace_cloud_files').': ';
+        $ret['login'] = array($search, $sort);
+        $ret['login_btn_label'] = get_string('search');
         $ret['login_btn_action'] = 'search';
         $ret['allowcaching'] = true; // indicates that login form can be cached in filepicker.js
         return $ret;
     }
-	
-	/**
-     * File types supported
+
+    /**
+     * file types supported by youtube plugin
      * @return array
      */
     public function supported_filetypes() {
-        return array('*'); // Indicates that all types are supported
+        return '*';
     }
 
     /**
-     * Plugin only return external links
+     * Youtube plugin only return external links
      * @return int
      */
     public function supported_returntypes() {
