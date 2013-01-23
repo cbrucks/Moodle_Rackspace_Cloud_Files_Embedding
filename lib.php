@@ -88,6 +88,15 @@ class repository_rackspace_cloud_files extends repository {
         $ret['allowcaching'] = true; // indicates that login form can be cached in filepicker.js
         return $ret;
     }
+	
+	public static function type_config_form($mform, $classname = 'repository') {
+        parent::type_config_form($mform);
+        $strrequired = get_string('required');
+        $mform->addElement('text', 'username', get_string('username', 'repository_rackspace_cloud_files'));
+        $mform->addElement('text', 'api_key', get_string('api_key', 'repository_rackspace_cloud_files'));
+        $mform->addRule('username', $strrequired, 'required', null, 'client');
+        $mform->addRule('api_key', $strrequired, 'required', null, 'client');
+    }
 
     /**
      * file types supported by youtube plugin
