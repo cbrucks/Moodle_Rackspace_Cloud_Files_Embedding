@@ -109,6 +109,9 @@ class repository_rackspace_cloud_files extends repository {
 		if (!ctype_alnum($data['api_key']) || !is_numeric('0x'.$data['api_key'])) {
 			$errors['api_key'] = get_string('invalid_api_key', 'repository_rackspace_cloud_files');
 		}
+		elseif (strlen($data['username']) <=0) {
+			$errors['username'] = get_string('invalid_username', 'repository_rackspace_cloud_files');
+		} 
 		else
 		{
 			//Now lets create a new instance of the authentication Class.
