@@ -43,10 +43,13 @@ class repository_rackspace_cloud_files extends repository {
      */
     public function __construct($repositoryid, $context = SYSCONTEXTID, $options = array()) {
         parent::__construct($repositoryid, $context, $options);
+		
+        $this->api_key = get_config('s3', 'api_key');
+        $this->secret_key = get_config('s3', 'secret_key');
     }
 
     public function check_login() {
-        return false;
+        return true;
     }
 
     /**
