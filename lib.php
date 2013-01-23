@@ -46,7 +46,7 @@ class repository_rackspace_cloud_files extends repository {
     }
 
     public function check_login() {
-        return true;
+        return false;
     }
 
     /**

@@ -23,11 +23,7 @@
  */
 
 $string['configplugin'] = 'Rackspace Cloud Files configuration';
-$string['notitle'] = 'notitle';
-$string['remember'] = 'Remember me';
 $string['pluginname'] = 'Rackspace Cloud Files';
-$string['apikey'] = 'Rackspace Cloud Files API key';
-$string['rackspace'] = 'Rackspace';
 $string['search'] = 'This is a string';
 $string['instruction'] = 'You can get your API Key from <a href="http://mycloud.rackspace.com">Rackspace Cloud Control Panel</a>. Expand the drop-down menu at the top right where your username is.  Click "API Keys" and finally click "Show Key"';
 $string['cdn'] = 'CDN (Content Delivery Network)';
