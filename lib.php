@@ -133,11 +133,11 @@ class repository_rackspace_cloud_files extends repository {
 		} 
 		else
 		{
-			//Now lets create a new instance of the authentication Class.
-			$this->auth = new CF_Authentication($this->user, $this->api_key);
 			try {
+				//Now lets create a new instance of the authentication Class.
+				$auth = new CF_Authentication($this->user, $this->api_key);
 				//Calling the Authenticate method returns a valid storage token and allows you to connect to the CloudFiles Platform.
-				$this->auth->authenticate();
+				$auth->authenticate();
 				
 			} catch (Exception $e) {
 				$errors['auth_error'] = get_string('auth_error', 'repository_rackspace_cloud_files').'<br />"'.$e->getMessage().'"';
