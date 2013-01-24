@@ -71,7 +71,7 @@ class repository_rackspace_cloud_files extends repository {
     public function get_listing($path='', $page = '') {
         global $CFG, $OUTPUT;
         //if (empty($this->api_key)) {
-            throw new moodle_exception('need_api_key', 'repository_rackspace_cloud_files');
+            throw new moodle_exception($this->username.' '.$this->api_key.' '.$this->container_name.' '.$this->cdn, 'repository_rackspace_cloud_files');
         //}
         // elseif (empty($this->username)) {
             // throw new moodle_exception('need_username', 'repository_rackspace_cloud_files');
