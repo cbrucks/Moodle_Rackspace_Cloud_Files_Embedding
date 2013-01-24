@@ -55,9 +55,9 @@ class repository_rackspace_cloud_files extends repository {
         $this->api_key = get_config('s3', 'api_key');
         $this->secret_key = get_config('s3', 'secret_key');
 		
-		$this->user = '';
-		$this->api_key = '';
-		$this->repo_name = '';
+		$this->user = null;
+		$this->api_key = null;
+		$this->repo_name = null;
 		$this->cdn = true;
 		
 		$this->auth = null;
@@ -138,9 +138,9 @@ class repository_rackspace_cloud_files extends repository {
 			} 
 			else {
 				//Now lets create a new instance of the authentication Class.
-				$auth = new CF_Authentication($this->user, $this->api_key);
+				//$auth = new CF_Authentication($this->user, $this->api_key);
 				//Calling the Authenticate method returns a valid storage token and allows you to connect to the CloudFiles Platform.
-				$auth->authenticate();
+				//$auth->authenticate();
 			}				
 		} catch (Exception $e) {
 			$errors['auth_error'] = get_string('auth_error', 'repository_rackspace_cloud_files').'<br />"'.$e->getMessage().'"';
