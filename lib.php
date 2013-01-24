@@ -37,10 +37,7 @@ require_once('cloudfiles.php');
 
 class repository_rackspace_cloud_files extends repository {
 
-	public $user = '';
-	public $api_key = '';
-	public $repo_name = '';
-	public $cdn = true;
+
 
     /**
      * Youtube plugin constructor
@@ -53,6 +50,11 @@ class repository_rackspace_cloud_files extends repository {
 		
         $this->api_key = get_config('s3', 'api_key');
         $this->secret_key = get_config('s3', 'secret_key');
+		
+		$this->user = '';
+		$this->api_key = '';
+		$this->repo_name = '';
+		$this->cdn = true;
 		
 		$this->auth = null;
     }
