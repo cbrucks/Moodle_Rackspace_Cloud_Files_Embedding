@@ -79,9 +79,8 @@ class repository_rackspace_cloud_files extends repository {
             $this->container = $conn->create_container($this->container_name);
         }
         
-        $cdn_enable = $this->cdn == 0;
+        $cdn_enable = $this->cdn == 1;
         
-        throw new moodle_exception($this->cdn, 'repository_rackspace_cloud_files');
         if ($cdn_enable) {
             // Enable CDN for the container
             $this->container->make_public();
