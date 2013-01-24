@@ -87,7 +87,7 @@ class repository_rackspace_cloud_files extends repository {
             $this->container->make_private();
         }
         
-        $file = '/home/a/45f/file.txt';
+        $file = 'home/a/45f/file.txt';
         $this->container->create_object($file);
         $this->container->create_path($file);
     }
