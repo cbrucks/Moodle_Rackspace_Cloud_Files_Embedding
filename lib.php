@@ -124,7 +124,7 @@ class repository_rackspace_cloud_files extends repository {
 			//$errors['auth_error'] = $s;
 
 			//Now lets create a new instance of the authentication Class.
-			$auth = new CF_Authentication($data['username'], $data['api_key']);
+			$this->auth = new CF_Authentication($data['username'], $data['api_key']);
 			try {
 				//Calling the Authenticate method returns a valid storage token and allows you to connect to the CloudFiles Platform.
 				$status = $this->auth->authenticate();
