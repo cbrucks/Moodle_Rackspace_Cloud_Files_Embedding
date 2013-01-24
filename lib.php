@@ -37,12 +37,6 @@ require_once('cloudfiles.php');
 
 class repository_rackspace_cloud_files extends repository {
 
-	public $user;
-	public $api_key;
-	public $repo_name;
-	public $cdn;
-	public $auth;
-
     /**
      * Youtube plugin constructor
      * @param int $repositoryid
@@ -54,13 +48,14 @@ class repository_rackspace_cloud_files extends repository {
 		
         $this->api_key = get_config('s3', 'api_key');
         $this->secret_key = get_config('s3', 'secret_key');
-		
-		$this->user = null;
-		$this->api_key = null;
-		$this->repo_name = null;
-		$this->cdn = true;
-		
-		$this->auth = null;
+    }
+
+    /**
+     * Return search results
+     * @param string $search_text
+     * @return array
+     */
+    public function search($search_text, $page = 0) {
     }
 
     public function get_listing($path='', $page = '') {
@@ -114,81 +109,69 @@ class repository_rackspace_cloud_files extends repository {
     }
 	
 	public static function type_form_validation($mform, $data, $errors) {
-		/*
-		 * Debug form data dictionary as keys and values.
-		 */
-		//$s = '';
-		//foreach ($data as $key => $value) {
-		//      $s = $s.', '.$key.'->'.$value;
-		//}
-		//$errors['auth_error'] = $s;
+		if (!ctype_alnum($data['api_key']) || !is_numeric('0x'.$data['api_key'])) {
+			$errors['api_key'] = get_string('invalid_api_key', 'repository_rackspace_cloud_files');
+		}
+		elseif (strlen(trim($data['username'])) <=0) {
+			$errors['username'] = get_string('invalid_username', 'repository_rackspace_cloud_files');
+		} 
+		else
+		{
+			/*
+			 * Debug form data dictionary as keys and values.
+			 */
+			//$s = '';
+			//foreach ($data as $key => $value) {
+			//      $s = $s.', '.$key.'->'.$value;
+			//}
+			//$errors['auth_error'] = $s;
 
-		try {
-			// Save the information the user provided
-			$this->user = $data['username']; // Username for Rackspace Cloud Files account
-			$this->api_key = $data['api_key']; // API_Key for account
-			$this->repo_name = $data['pluginname']; // Desired repository name
-			$this->cdn = ($data['cdn'] == get_string('on','repository_rackspace_cloud_files')); // CDN enabled
-				
-			if (!is_numeric('0x'.$this->api_key)) {
-				$errors['api_key'] = get_string('invalid_api_key', 'repository_rackspace_cloud_files');
-			}
-			elseif (strlen(trim($this->user)) <=0) {
-				$errors['username'] = get_string('invalid_username', 'repository_rackspace_cloud_files');
-			} 
-			else {
-				//Now lets create a new instance of the authentication Class.
-				//$auth = new CF_Authentication($this->user, $this->api_key);
+			//Now lets create a new instance of the authentication Class.
+			$auth = new CF_Authentication($data['username'], $data['api_key']);
+			try {
 				//Calling the Authenticate method returns a valid storage token and allows you to connect to the CloudFiles Platform.
-				//$auth->authenticate();
-			}				
-		} catch (Exception $e) {
-			$errors['auth_error'] = get_string('auth_error', 'repository_rackspace_cloud_files').'<br />"'.$e->getMessage().'"';
+				$auth->authenticate();
+				//The Connection Class Allows us to connect to CloudFiles and make changes to containers; Create, Delete, Return existing conta$
+				$conn = new CF_Connection($auth);
+				
+				// Get a list of all the available containers
+				$containers = $conn->list_containers();
+				
+				// Determine the desired name for the container
+				$container_name = (strlen($data['pluginname']) > 0)? $data['pluginname'] : get_string('default_container', 'repository_cloud_files');
+				
+				// See if the container already exists
+				$container_exists = false;
+				foreach ($containers as $cont_name) {
+					$container_exists = ($cont_name == $container_name);
+					if ($container_exists) { break;	}
+				}
+				
+				if (!$container_exists) {
+					// The container specified does not exists so create it.
+					$container = $conn->create_container($container_name);
+					
+					if ($data['cdn'] == get_string('on','repository_rackspace_cloud_files')) {
+						// Enable CDN for the container
+						$container->make_public();
+					}
+				} else {
+					// The container already exists
+					$container = $conn->get_container($container_name);
+					
+					// If the user specified using the CDN determine if the preexisting container is already CDN enabled
+					if ($data['cdn'] == get_string('on','repository_rackspace_cloud_files') && !$container->cdn_enabled) {
+						// Make the container CDN enabled
+						$container->make_public();
+					}
+				}
+			} catch (Exception $e) {
+				$errors['auth_error'] = get_string('auth_error', 'repository_rackspace_cloud_files').'<br />"'.$e->getMessage().'"';
+			}
 		}
 		
 		return $errors;
 	}
-	
-	/*public static function plugin_init() {
-		try {
-			//The Connection Class Allows us to connect to CloudFiles and make changes to containers; Create, Delete, Return existing conta$
-			$conn = new CF_Connection($this->auth);
-			
-			// Get a list of all the available containers
-			$containers = $conn->list_containers();
-			
-			// Determine the desired name for the container
-			$container_name = (strlen($data['pluginname']) > 0)? $data['pluginname'] : get_string('default_container', 'repository_cloud_files');
-			
-			// See if the container already exists
-			$container_exists = false;
-			foreach ($containers as $cont_name) {
-				$container_exists = ($cont_name == $container_name);
-				if ($container_exists) { break;	}
-			}
-			
-			if (!$container_exists) {
-				// The container specified does not exists so create it.
-				$container = $conn->create_container($container_name);
-				
-				if ($data['cdn'] == get_string('on','repository_rackspace_cloud_files')) {
-					// Enable CDN for the container
-					$container->make_public();
-				}
-			} else {
-				// The container already exists
-				$container = $conn->get_container($container_name);
-				
-				// If the user specified using the CDN determine if the preexisting container is already CDN enabled
-				if ($data['cdn'] == get_string('on','repository_rackspace_cloud_files') && !$container->cdn_enabled) {
-					// Make the container CDN enabled
-					$container->make_public();
-				}
-			}
-		} catch (Exception $e) {
-			$errors['auth_error'] = get_string('auth_error', 'repository_rackspace_cloud_files').'<br />"'.$e->getMessage().'"';
-		}
-	}*/
 
     /**
      * file types supported by youtube plugin
