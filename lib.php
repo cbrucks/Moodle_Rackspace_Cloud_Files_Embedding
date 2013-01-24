@@ -55,12 +55,17 @@ class repository_rackspace_cloud_files extends repository {
         $this->cdn = !get_config('rackspace_cloud_files', 'cdn');
 
 
-        $this->auth = new CF_Authentication($this->username, $this->api_key);
-        $this->auth->authenticate();
-        $this->conn = new CF_Connection($this->auth);
-        $this->container = $this->conn->get_container($this->container_name);
+        try {
+            $this->auth = new CF_Authentication($this->username, $this->api_key);
+            $this->auth->authenticate();
+            $this->conn = new CF_Connection($this->auth);
+            $this->container = $this->conn->get_container($this->container_name);
 
-        $this->container->create_object('test object');
+            $this->container->create_object('test object');
+        }
+        catch (Exception $e) {
+            throw new moodle_exception('repo_auth_fail', 'repository_rackspace_cloud_files');
+        }
     }
 
     public function get_listing($path='', $page = '') {
@@ -81,50 +86,48 @@ class repository_rackspace_cloud_files extends repository {
             array('name' => get_string('pluginname', 'repository_rackspace_cloud_files'), 'path' => '')
         );
 
-        // the management interface url
-        $list['manage'] = false;
-        // dynamically loading
-        $list['dynload'] = true;
-        // the current path of this list.
-        // set to true, the login link will be removed
-        $list['nologin'] = true;
-        // set to true, the search button will be removed
-        $list['nosearch'] = true;
+        $list = array(
+         //this will be used to build navigation bar
+        'path'=>array(array('name'=>'root','path'=>'/'), array('name'=>'subfolder', 'path'=>'/subfolder')),
+        'manage'=>'http://webmgr.moodle.com',
+        'list'=> array(
+            array('title'=>'filename1', 'date'=>'1340002147', 'size'=>'10451213', 'source'=>'http://www.moodle.com/dl.rar'),
+            array('title'=>'folder', 'date'=>'1340002147', 'size'=>'0', 'children'=>array())
+        )
+        );
+        
+        // // the management interface url
+        // $list['manage'] = false;
+        // // dynamically loading
+        // $list['dynload'] = true;
+        // // the current path of this list.
+        // // set to true, the login link will be removed
+        // $list['nologin'] = true;
+        // // set to true, the search button will be removed
+        // $list['nosearch'] = true;
 
-        $tree = array();
+        // $tree = array();
         
-        if (empty($path)) {
-            try {
-                $objects = $this->auth->list_objects();
-            } catch (Exception $e) {
-                throw new moodle_exception('errorwhilecommunicatingwith', 'repository', '', $this->get_name());
-            }
-            foreach ($objects as $obj) {
-                $folder = array(
-                    'title' => $obj,
-                    'children' => array(),
-                    'thumbnail' => $OUTPUT->pix_url(file_folder_icon(90))->out(false),
-                    'path' => $obj
-                    );
-                $tree[] = $folder;
-            }
-        } else {
+        // if (empty($path)) {
+            // try {
+                // $objects = $this->auth->list_objects();
+            // } catch (Exception $e) {
+                // throw new moodle_exception('errorwhilecommunicatingwith', 'repository', '', $this->get_name());
+            // }
+            // foreach ($objects as $obj) {
+                // $folder = array(
+                    // 'title' => $obj,
+                    // 'children' => array(),
+                    // 'thumbnail' => $OUTPUT->pix_url(file_folder_icon(90))->out(false),
+                    // 'path' => $obj
+                    // );
+                // $tree[] = $folder;
+            // }
+        // } else {
         
-        }
-        $list['list'] = $tree;
-        
-        try {
-            // $this->auth = new CF_Authentication($this->username, $this->api_key);
-            // $this->auth->authenticate();
-            
-            // $this->conn = new CF_Connection($this->auth);
-            // $this->container = $this->conn->get_container($this->container_name);
+        // }
+        // $list['list'] = $tree;
 
-            // $list = $this->container->list_objects();
-        }
-        catch (Exception $e) {
-            $list =  array('failed');
-        }
         return $list;
     }
 
