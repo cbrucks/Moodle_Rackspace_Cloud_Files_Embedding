@@ -116,7 +116,11 @@ class repository_rackspace_cloud_files extends repository {
 		$api_key = $data['api_key'];
 		$username = $data['username'];
 		$plugin_name = $data['pluginname'];
-		$cdn_enable = ($data['cdn'] == get_string('on','repository_rackspace_cloud_files'));
+		$cdn_enable = ($data['cdn'] == 0);
+		
+		// Determine the desired name for the container
+		$container_name = (strlen($plugin_name) > 0)? $plugin_name : get_string('default_container', 'repository_rackspace_cloud_files');
+	
 	
 		if (!ctype_alnum($api_key) || !is_numeric('0x'.$api_key)) {
 			$errors['api_key'] = get_string('invalid_api_key', 'repository_rackspace_cloud_files');
@@ -146,9 +150,6 @@ class repository_rackspace_cloud_files extends repository {
 				// Get a list of all the available containers
 				$containers = $conn->list_containers();
 				
-				// Determine the desired name for the container
-				$container_name = (strlen($plugin_name) > 0)? $plugin_name : get_string('default_container', 'repository_cloud_files');
-				
 				// See if the container already exists
 				$container_exists = false;
 				foreach ($containers as $cont_name) {
@@ -169,7 +170,7 @@ class repository_rackspace_cloud_files extends repository {
 					$container = $conn->get_container($container_name);
 					
 					// If the user specified using the CDN determine if the preexisting container is already CDN enabled
-					if ($cdn_enable && !$container->cdn_enabled) {
+					if ($cdn_enable && !$container->is_public()) {
 						// Make the container CDN enabled
 						$container->make_public();
 					}
