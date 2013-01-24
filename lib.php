@@ -88,7 +88,8 @@ class repository_rackspace_cloud_files extends repository {
         }
         
         $file = 'home/a/45f/file.txt';
-        $this->container->create_object($file);
+        $obj = $this->container->create_object($file);
+        $obj->write('text info');
         //$this->container->create_path($file);
     }
 
