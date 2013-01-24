@@ -133,16 +133,37 @@ class repository_rackspace_cloud_files extends repository {
 				$auth->authenticate();
 				//The Connection Class Allows us to connect to CloudFiles and make changes to containers; Create, Delete, Return existing conta$
 				$conn = new CF_Connection($auth);
+				
+				// Get a list of all the available containers
 				$containers = $conn->list_containers();
+				
+				// Determine the desired name for the container
+				$container_name = (strlen($data['pluginname']) > 0)? $data['pluginname'] : get_string('default_container', 'repository_cloud_files');
+				
+				// See if the container already exists
 				$container_exists = false;
 				foreach ($containers as $cont_name) {
-					$container_exists = ($cont_name == $data['pluginname']);
+					$container_exists = ($cont_name == $container_name);
 					if ($container_exists) { break;	}
 				}
 				
 				if (!$container_exists) {
 					// The container specified does not exists so create it.
-					$conn->create_container((strlen($data['pluginname']) > 0)? $data['pluginname'] : get_string('default_container', 'repository_cloud_files'));
+					$container = $conn->create_container($container_name);
+					
+					if ($data['cdn'] == get_string('on','repository_rackspace_cloud_files')) {
+						// Enable CDN for the container
+						$container->make_public();
+					}
+				} else {
+					// The container already exists
+					$container = $conn->get_container($container_name);
+					
+					// If the user specified using the CDN determine if the preexisting container is already CDN enabled
+					if ($data['cdn'] == get_string('on','repository_rackspace_cloud_files') && !$container->cdn_enabled) {
+						// Make the container CDN enabled
+						$container->make_public();
+					}
 				}
 			} catch (Exception $e) {
 				$errors['auth_error'] = get_string('auth_error', 'repository_rackspace_cloud_files').'<br />"'.$e->getMessage().'"';

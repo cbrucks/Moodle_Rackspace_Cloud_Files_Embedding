@@ -28,6 +28,8 @@ $string['pluginname'] = 'Rackspace Cloud Files';
 /*
  * Admin Plugin Setup Form Strings
  */
+$string['default_container'] = 'Moodle_Public_Repo';
+ 
 $string['cdn'] = 'CDN (Content Delivery Network)';
 $string['on'] = 'on';
 $string['off'] = 'off';
