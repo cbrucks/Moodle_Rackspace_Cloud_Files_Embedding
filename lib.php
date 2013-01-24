@@ -52,7 +52,7 @@ class repository_rackspace_cloud_files extends repository {
         $this->api_key = get_config('rackspace_cloud_files', 'api_key');
         $plugin_name = get_config('rackspace_cloud_files', 'pluginname');
         $this->container_name = (strlen($plugin_name) > 0)? $plugin_name : get_string('default_container', 'repository_rackspace_cloud_files');
-        $this->cdn = !get_config('rackspace_cloud_files', 'cdn');
+        $this->cdn_enable = get_config('rackspace_cloud_files', 'cdn') == 0;
 
         // Verify authentication information
         try {
@@ -79,9 +79,7 @@ class repository_rackspace_cloud_files extends repository {
             $this->container = $conn->create_container($this->container_name);
         }
         
-        $cdn_enable = $this->cdn == 1;
-        
-        if ($cdn_enable) {
+        if ($this->cdn_enable) {
             // Enable CDN for the container
             $this->container->make_public();
         } else {
