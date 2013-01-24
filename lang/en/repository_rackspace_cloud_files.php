@@ -28,6 +28,10 @@ $string['pluginname'] = 'Rackspace Cloud Files';
 /*
  * Admin Plugin Setup Form Strings
  */
+$string['cdn'] = 'CDN (Content Delivery Network)';
+$string['on'] = 'on';
+$string['off'] = 'off';
+
 $string['auth_host'] = 'Hosting Location';
 $string['US'] = 'United States';
 $string['UK'] = 'United Kingdom';
@@ -50,5 +54,4 @@ $string['auth_error'] = 'Authentication unsuccessful!';
  * 
  */
 $string['search'] = 'This is a string';
-$string['cdn'] = 'CDN (Content Delivery Network)';
 $string['cdn_info'] = 'CDN will cache files on servers closer to your users resulting in faster downloads of large files.';
