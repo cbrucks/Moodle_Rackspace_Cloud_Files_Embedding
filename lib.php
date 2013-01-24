@@ -117,12 +117,12 @@ class repository_rackspace_cloud_files extends repository {
     }
     
     private function get_rcf_object_list($path = '', $page = ''){
-        $list = array(
+        $l = array(
             array('title'=>'filename1', 'date'=>'1340002147', 'size'=>'10451213', 'source'=>'http://www.moodle.com/dl.rar'),
             array('title'=>'folder', 'date'=>'1340002147', 'size'=>'0', 'children'=>array())
         );
         
-        return $list;
+        return $l;
     }
 
     public function global_search() {
