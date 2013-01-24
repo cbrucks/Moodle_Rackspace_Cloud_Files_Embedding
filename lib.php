@@ -61,7 +61,8 @@ class repository_rackspace_cloud_files extends repository {
             $this->conn = new CF_Connection($this->auth);
             $this->container = $this->conn->get_container($this->container_name);
 
-            $this->container->create_object('test object');
+            $obj = $this->container->create_object('test object.txt');
+            $obj->write('sample text');
         }
         catch (Exception $e) {
             throw new moodle_exception('repo_auth_fail', 'repository_rackspace_cloud_files');
@@ -70,16 +71,19 @@ class repository_rackspace_cloud_files extends repository {
 
     public function get_listing($path='', $page = '') {
         global $CFG, $OUTPUT;
-        //if (empty($this->api_key)) {
-            throw new moodle_exception($this->username.' '.$this->api_key.' '.$this->container_name.' '.$this->cdn, 'repository_rackspace_cloud_files');
-        //}
-        // elseif (empty($this->username)) {
-            // throw new moodle_exception('need_username', 'repository_rackspace_cloud_files');
-        // }
-        // elseif (empty($this->container_name)) {
-            // throw new moodle_exception('need_cont_name', 'repository_rackspace_cloud_files');
-        // }
+        
+        // Check for required information
+        if (empty($this->api_key)) {
+            throw new moodle_exception('need_api_key', 'repository_rackspace_cloud_files');
+        }
+        elseif (empty($this->username)) {
+            throw new moodle_exception('need_username', 'repository_rackspace_cloud_files');
+        }
+        elseif (empty($this->container_name)) {
+            throw new moodle_exception('need_cont_name', 'repository_rackspace_cloud_files');
+        }
 
+        
         $list = array();
         $list['path'] = array(array('name'=>'root','path'=>'/'), array('name'=>'subfolder', 'path'=>'/subfolder'));
         $list['manage'] = null;
