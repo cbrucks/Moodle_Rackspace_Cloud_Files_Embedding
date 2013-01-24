@@ -119,29 +119,27 @@ class repository_rackspace_cloud_files extends repository {
 		//}
 		//$errors['auth_error'] = $s;
 
-		// Save the information the user provided
-		$this->user = $data['username']; // Username for Rackspace Cloud Files account
-		$this->api_key = $data['api_key']; // API_Key for account
-		$this->repo_name = $data['pluginname']; // Desired repository name
-		$this->cdn = ($data['cdn'] == get_string('on','repository_rackspace_cloud_files')); // CDN enabled
-			
-		if (!is_numeric('0x'.$this->api_key)) {
-			$errors['api_key'] = get_string('invalid_api_key', 'repository_rackspace_cloud_files');
-		}
-		elseif (strlen(trim($this->user)) <=0) {
-			$errors['username'] = get_string('invalid_username', 'repository_rackspace_cloud_files');
-		} 
-		else
-		{
-			try {
+		try {
+			// Save the information the user provided
+			$this->user = $data['username']; // Username for Rackspace Cloud Files account
+			$this->api_key = $data['api_key']; // API_Key for account
+			$this->repo_name = $data['pluginname']; // Desired repository name
+			$this->cdn = ($data['cdn'] == get_string('on','repository_rackspace_cloud_files')); // CDN enabled
+				
+			if (!is_numeric('0x'.$this->api_key)) {
+				$errors['api_key'] = get_string('invalid_api_key', 'repository_rackspace_cloud_files');
+			}
+			elseif (strlen(trim($this->user)) <=0) {
+				$errors['username'] = get_string('invalid_username', 'repository_rackspace_cloud_files');
+			} 
+			else {
 				//Now lets create a new instance of the authentication Class.
 				$auth = new CF_Authentication($this->user, $this->api_key);
 				//Calling the Authenticate method returns a valid storage token and allows you to connect to the CloudFiles Platform.
 				$auth->authenticate();
-				
-			} catch (Exception $e) {
-				$errors['auth_error'] = get_string('auth_error', 'repository_rackspace_cloud_files').'<br />"'.$e->getMessage().'"';
-			}
+			}				
+		} catch (Exception $e) {
+			$errors['auth_error'] = get_string('auth_error', 'repository_rackspace_cloud_files').'<br />"'.$e->getMessage().'"';
 		}
 		
 		return $errors;
