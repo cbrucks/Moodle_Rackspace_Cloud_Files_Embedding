@@ -91,8 +91,26 @@ class repository_rackspace_cloud_files extends repository {
         // set to true, the search button will be removed
         $list['nosearch'] = true;
 
-        $tree = array('asafasdfsd','asasdfafsd');
+        $tree = array();
         
+        if (empty($path)) {
+            try {
+                $objects = $this->auth->list_objects();
+            } catch (Exception $e) {
+                throw new moodle_exception('errorwhilecommunicatingwith', 'repository', '', $this->get_name());
+            }
+            foreach ($objects as $obj) {
+                $folder = array(
+                    'title' => $obj,
+                    'children' => array(),
+                    'thumbnail' => $OUTPUT->pix_url(file_folder_icon(90))->out(false),
+                    'path' => $obj
+                    );
+                $tree[] = $folder;
+            }
+        } else {
+        
+        }
         $list['list'] = $tree;
         
         try {
