@@ -53,9 +53,6 @@ class repository_rackspace_cloud_files extends repository {
         $this->container_name = get_config('rackspace_cloud_files', 'pluginname');
         $this->cdn = !get_config('rackspace_cloud_files', 'cdn');
 
-        $file_h = fopen('log.txt', 'w');
-        fwrite($file_h, $this->username.'\n'.$this->api_key.'\n'.$this->container_name.'\n'.$this->cdn);
-        fclose($file_h);
 
         //$this->auth = new CF_Authentication($this->username, $this->api_key);
         //auth->authenticate();
@@ -66,7 +63,20 @@ class repository_rackspace_cloud_files extends repository {
     }
 
     public function get_listing($path='', $page = '') {
-        return array();
+        $list = array('ummm');
+        try {
+            $this->auth = new CF_Authentication($this->username, $this->api_key);
+            $this->auth->authenticate();
+            
+            $this->conn = new CF_Connection($this->auth);
+            $this->container = $this->conn->get_container($this->container_name);
+
+            $list = $this->container->list_objects();
+        }
+        catch (Exception $e) {
+            $list =  array('failed');
+        }
+        return $list;
     }
 
     public function global_search() {
