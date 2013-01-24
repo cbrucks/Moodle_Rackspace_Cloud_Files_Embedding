@@ -48,39 +48,23 @@ class repository_rackspace_cloud_files extends repository {
     public function __construct($repositoryid, $context = SYSCONTEXTID, $options = array()) {
         parent::__construct($repositoryid, $context, $options);
 		
-        $this->api_key = get_config('s3', 'api_key');
-        $this->secret_key = get_config('s3', 'secret_key');
+        $this->username = get_config('rackspace_cloud_files', 'username');
+        $this->api_key = get_config('rackspace_cloud_files', 'api_key');
+        $this->container_name = get_config('rackspace_cloud_files', 'pluginname');
+        $this->cdn = !get_config('rackspace_cloud_files', 'cdn');
 		
-		$this->cdn = true;
-    }
-
-    /**
-     * Return search results
-     * @param string $search_text
-     * @return array
-     */
-    public function search($search_text, $page = 0) {
+		$this->auth = new CF_Authentication($this->username, $this->api_key);
+		auth->authenticate();
+		$this->conn = new CF_Connection($this->auth);
+		$this->container = $this->conn->get_container($this->container_name);
+		
+		$this->container->create_object('test object');
     }
 
     public function get_listing($path='', $page = '') {
         return array();
     }
 
-    /**
-     * Generate search form
-     */
-    public function print_login($ajax = true) {
-	    // This is where the user interaction happens
-        
-    }
-
-    public function check_login() {
-        return true;
-    }
-	
-    /**
-     * Youtube plugin doesn't support global search
-     */
     public function global_search() {
         return false;
     }
@@ -95,17 +79,23 @@ class repository_rackspace_cloud_files extends repository {
 		//$ah = $mform->addElement('select', 'auth_host', get_string('auth_host','repository_rackspace_cloud_files'), array(get_string('US','repository_rackspace_cloud_files'), get_string('UK','repository_rackspace_cloud_files')));
 		//$ah->setMultiple(false);
 		//$ah->setSelected(get_string('US','repository_rackspace_cloud_files'));
+		
 		//$v = $mform->addElement('select', 'version', get_string('version','repository_rackspace_cloud_files'), array(get_string('v1','repository_rackspace_cloud_files'), get_string('v2','repository_rackspace_cloud_files')));
 		//$v->setMultiple(false);
 		//$v->setSelected(get_string('v1','repository_rackspace_cloud_files'));
+		
 		$cdn = $mform->addElement('select', 'cdn', get_string('cdn','repository_rackspace_cloud_files'), array(get_string('on','repository_rackspace_cloud_files'), get_string('off','repository_rackspace_cloud_files')));
 		$cdn->setMultiple(false);
 		$cdn->setSelected(get_string('on','repository_rackspace_cloud_files'));
+		
 		$mform->addElement('static','spacer','','');
+		
 		$mform->addElement('static','auth_error','','');
+		
         $mform->addElement('text', 'username', get_string('username', 'repository_rackspace_cloud_files'));
         $mform->addElement('text', 'api_key', get_string('api_key', 'repository_rackspace_cloud_files'));
         $mform->addElement('static', 'instructions', '', get_string('instruct', 'repository_rackspace_cloud_files'));
+		
         //$mform->addRule('auth_host', $strrequired, 'required', null, 'client');
         //$mform->addRule('version', $strrequired, 'required', null, 'client');
         $mform->addRule('username', $strrequired, 'required', null, 'client');
@@ -178,10 +168,6 @@ class repository_rackspace_cloud_files extends repository {
 		}
 		
 		return $errors;
-	}
-	
-	public function save_user_info() {
-		
 	}
 
     /**
