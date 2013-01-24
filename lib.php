@@ -81,19 +81,11 @@ class repository_rackspace_cloud_files extends repository {
         }
 
         $list = array();
-        $list['list'] = array();
-        $list['path'] = array(
-            array('name' => get_string('pluginname', 'repository_rackspace_cloud_files'), 'path' => '')
-        );
-
-        $list = array(
-         //this will be used to build navigation bar
-        'path'=>array(array('name'=>'root','path'=>'/'), array('name'=>'subfolder', 'path'=>'/subfolder')),
-        'manage'=>'http://webmgr.moodle.com',
-        'list'=> array(
+        $list['path'] = array(array('name'=>'root','path'=>'/'), array('name'=>'subfolder', 'path'=>'/subfolder'));
+        $list['manage'] = 'http://webmgr.moodle.com';
+        $list['list'] = array(
             array('title'=>'filename1', 'date'=>'1340002147', 'size'=>'10451213', 'source'=>'http://www.moodle.com/dl.rar'),
             array('title'=>'folder', 'date'=>'1340002147', 'size'=>'0', 'children'=>array())
-        )
         );
         
         // // the management interface url
