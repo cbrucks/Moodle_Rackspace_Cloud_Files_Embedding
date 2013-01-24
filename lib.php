@@ -112,7 +112,7 @@ class repository_rackspace_cloud_files extends repository {
         $mform->addRule('api_key', $strrequired, 'required', null, 'client');
     }
 	
-	public static function type_form_validation($mform, $data, $errors) {	
+	public static function type_form_validation($mform, $data, $errors) {
 		$api_key = $data['api_key'];
 		$username = $data['username'];
 		$plugin_name = $data['pluginname'];
@@ -123,9 +123,11 @@ class repository_rackspace_cloud_files extends repository {
 	
 	
 		if (!ctype_alnum($api_key) || !is_numeric('0x'.$api_key)) {
+			// The API Key is not a hex string.  Throw a moodle error.
 			$errors['api_key'] = get_string('invalid_api_key', 'repository_rackspace_cloud_files');
 		}
 		elseif (strlen(trim($username)) <=0) {
+			// The username is blank.  Throw a moodle error.
 			$errors['username'] = get_string('invalid_username', 'repository_rackspace_cloud_files');
 		} 
 		else
@@ -141,9 +143,11 @@ class repository_rackspace_cloud_files extends repository {
 
 			//Now lets create a new instance of the authentication Class.
 			$auth = new CF_Authentication($username, $api_key);
+			
 			try {
 				//Calling the Authenticate method returns a valid storage token and allows you to connect to the CloudFiles Platform.
 				$auth->authenticate();
+				
 				//The Connection Class Allows us to connect to CloudFiles and make changes to containers; Create, Delete, Return existing conta$
 				$conn = new CF_Connection($auth);
 				
@@ -151,29 +155,22 @@ class repository_rackspace_cloud_files extends repository {
 				$containers = $conn->list_containers();
 				
 				// See if the container already exists
-				$container_exists = false;
-				foreach ($containers as $cont_name) {
-					$container_exists = ($cont_name == $container_name);
-					if ($container_exists) { break;	}
-				}
+				$container_exists = in_array($container_name, $containers);
 				
-				if (!$container_exists) {
-					// The container specified does not exists so create it.
-					$container = $conn->create_container($container_name);
-					
-					if ($cdn_enable) {
-						// Enable CDN for the container
-						$container->make_public();
-					}
-				} else {
+				if ($container_exists) {
 					// The container already exists
 					$container = $conn->get_container($container_name);
-					
-					// If the user specified using the CDN determine if the preexisting container is already CDN enabled
-					if ($cdn_enable && !$container->is_public()) {
-						// Make the container CDN enabled
-						$container->make_public();
-					}
+				} else {
+					// The container specified does not exists so create it.
+					$container = $conn->create_container($container_name);
+				}
+				
+				if ($cdn_enable) {
+					// Enable CDN for the container
+					$container->make_public();
+				} else {
+					// Disable CDN for the container
+					$container->make_private();
 				}
 			} catch (Exception $e) {
 				$errors['auth_error'] = get_string('auth_error', 'repository_rackspace_cloud_files').'<br />"'.$e->getMessage().'"';
