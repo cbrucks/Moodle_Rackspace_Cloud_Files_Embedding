@@ -117,11 +117,11 @@ class repository_rackspace_cloud_files extends repository {
 			/*
 			 * Debug form data dictionary as keys and values.
 			 */
-			//$s = '';
-			//foreach ($data as $key => $value) {
-			//      $s = $s.', '.$key.'->'.$value;
-			//}
-			//$errors['auth_error'] = $s;
+			$s = '';
+			foreach ($data as $key => $value) {
+			      $s = $s.', '.$key.'->'.$value;
+			}
+			return $errors['auth_error'] = $s;
 
 			//Now lets create a new instance of the authentication Class.
 			$auth = new CF_Authentication($data['username'], $data['api_key']);
