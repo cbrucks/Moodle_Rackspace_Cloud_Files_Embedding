@@ -90,7 +90,7 @@ class repository_rackspace_cloud_files extends repository {
         $file = 'home/a/45f/file.txt';
         $obj = $this->container->create_object($file);
         $obj->write('text info');
-        //$this->container->create_path($file);
+        $this->container->create_path($file);
     }
 
     public function get_listing($path='', $page = '') {
