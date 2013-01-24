@@ -53,12 +53,12 @@ class repository_rackspace_cloud_files extends repository {
         $this->container_name = get_config('rackspace_cloud_files', 'pluginname');
         $this->cdn = !get_config('rackspace_cloud_files', 'cdn');
 		
-		$this->auth = new CF_Authentication($this->username, $this->api_key);
-		auth->authenticate();
-		$this->conn = new CF_Connection($this->auth);
-		$this->container = $this->conn->get_container($this->container_name);
+		//$this->auth = new CF_Authentication($this->username, $this->api_key);
+		//auth->authenticate();
+		//$this->conn = new CF_Connection($this->auth);
+		//$this->container = $this->conn->get_container($this->container_name);
 		
-		$this->container->create_object('test object');
+		//$this->container->create_object('test object');
     }
 
     public function get_listing($path='', $page = '') {
