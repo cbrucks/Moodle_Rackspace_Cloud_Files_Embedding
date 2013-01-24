@@ -86,7 +86,7 @@ class repository_rackspace_cloud_files extends repository {
     }
 	
     public static function get_type_option_names() {
-        return array('username', 'api_key', 'pluginname');
+        return array('username', 'api_key', 'pluginname', 'cdn');
     }
 	
 	public static function type_config_form($mform, $classname = 'repository') {
@@ -112,13 +112,16 @@ class repository_rackspace_cloud_files extends repository {
         $mform->addRule('api_key', $strrequired, 'required', null, 'client');
     }
 	
-	public static function type_form_validation($mform, $data, $errors) {
-		$this->save_user_info();
+	public static function type_form_validation($mform, $data, $errors) {	
+		$api_key = $data['api_key'];
+		$username = $data['username'];
+		$plugin_name = $data['pluginname'];
+		$cdn_enable = ($data['cdn'] == get_string('on','repository_rackspace_cloud_files'));
 	
-		if (!ctype_alnum($data['api_key']) || !is_numeric('0x'.$data['api_key'])) {
+		if (!ctype_alnum($api_key) || !is_numeric('0x'.$api_key)) {
 			$errors['api_key'] = get_string('invalid_api_key', 'repository_rackspace_cloud_files');
 		}
-		elseif (strlen(trim($data['username'])) <=0) {
+		elseif (strlen(trim($username)) <=0) {
 			$errors['username'] = get_string('invalid_username', 'repository_rackspace_cloud_files');
 		} 
 		else
@@ -133,7 +136,7 @@ class repository_rackspace_cloud_files extends repository {
 			//$errors['auth_error'] = $s;
 
 			//Now lets create a new instance of the authentication Class.
-			$auth = new CF_Authentication($data['username'], $data['api_key']);
+			$auth = new CF_Authentication($username, $api_key);
 			try {
 				//Calling the Authenticate method returns a valid storage token and allows you to connect to the CloudFiles Platform.
 				$auth->authenticate();
@@ -144,7 +147,7 @@ class repository_rackspace_cloud_files extends repository {
 				$containers = $conn->list_containers();
 				
 				// Determine the desired name for the container
-				$container_name = (strlen($data['pluginname']) > 0)? $data['pluginname'] : get_string('default_container', 'repository_cloud_files');
+				$container_name = (strlen($plugin_name) > 0)? $plugin_name : get_string('default_container', 'repository_cloud_files');
 				
 				// See if the container already exists
 				$container_exists = false;
@@ -157,7 +160,7 @@ class repository_rackspace_cloud_files extends repository {
 					// The container specified does not exists so create it.
 					$container = $conn->create_container($container_name);
 					
-					if ($data['cdn'] == get_string('on','repository_rackspace_cloud_files')) {
+					if ($cdn_enable) {
 						// Enable CDN for the container
 						$container->make_public();
 					}
@@ -166,7 +169,7 @@ class repository_rackspace_cloud_files extends repository {
 					$container = $conn->get_container($container_name);
 					
 					// If the user specified using the CDN determine if the preexisting container is already CDN enabled
-					if ($data['cdn'] == get_string('on','repository_rackspace_cloud_files') && !$container->cdn_enabled) {
+					if ($cdn_enable && !$container->cdn_enabled) {
 						// Make the container CDN enabled
 						$container->make_public();
 					}
