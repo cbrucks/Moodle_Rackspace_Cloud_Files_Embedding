@@ -117,11 +117,11 @@ class repository_rackspace_cloud_files extends repository {
 			/*
 			 * Debug form data dictionary as keys and values.
 			 */
-			$s = '';
-			foreach ($data as $key => $value) {
-			      $s = $s.', '.$key.'->'.$value;
-			}
-			return $errors['auth_error'] = $s;
+			//$s = '';
+			//foreach ($data as $key => $value) {
+			//      $s = $s.', '.$key.'->'.$value;
+			//}
+			//$errors['auth_error'] = $s;
 
 			//Now lets create a new instance of the authentication Class.
 			$auth = new CF_Authentication($data['username'], $data['api_key']);
@@ -139,7 +139,7 @@ class repository_rackspace_cloud_files extends repository {
 				
 				if (!$container_exists) {
 					// The container specified does not exists so create it.
-					$conn->create_container($data['pluginname']);
+					$conn->create_container((strlen($data['pluginname']) > 0)? $data['pluginname'] : get_string('default_container', 'repository_cloud_files'));
 				}
 			} catch (Exception $e) {
 				$errors['auth_error'] = get_string('auth_error', 'repository_rackspace_cloud_files').'<br />"'.$e->getMessage().'"';
