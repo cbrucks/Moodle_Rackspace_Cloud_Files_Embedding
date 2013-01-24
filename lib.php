@@ -124,22 +124,22 @@ class repository_rackspace_cloud_files extends repository {
 			//$errors['auth_error'] = $s;
 
 			//Now lets create a new instance of the authentication Class.
-			$this->auth = new CF_Authentication($data['username'], $data['api_key']);
+			$auth = new CF_Authentication($data['username'], $data['api_key']);
 			try {
 				//Calling the Authenticate method returns a valid storage token and allows you to connect to the CloudFiles Platform.
-				$status = $this->auth->authenticate();
+				$auth->authenticate();
 				//The Connection Class Allows us to connect to CloudFiles and make changes to containers; Create, Delete, Return existing conta$
-				$this->conn = new CF_Connection($this->auth);
-				$containers = $this->conn->list_containers();
+				$conn = new CF_Connection($auth);
+				$containers = $conn->list_containers();
 				$container_exists = false;
-				foreach ($containers as $container) {
-					$container_exists = $container->name == $data['pluginname'];
+				foreach ($containers as $cont_name) {
+					$container_exists = ($cont_name == $data['pluginname']);
 					if ($container_exists) { break;	}
 				}
 				
-				// The container specified does not exists so create it.
 				if (!$container_exists) {
-					$this->conn->create_container($data['pluginname']);
+					// The container specified does not exists so create it.
+					$conn->create_container($data['pluginname']);
 				}
 			} catch (Exception $e) {
 				$errors['auth_error'] = get_string('auth_error', 'repository_rackspace_cloud_files').'<br />"'.$e->getMessage().'"';
