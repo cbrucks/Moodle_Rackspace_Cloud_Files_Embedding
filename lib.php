@@ -50,6 +50,8 @@ class repository_rackspace_cloud_files extends repository {
 		
         $this->api_key = get_config('s3', 'api_key');
         $this->secret_key = get_config('s3', 'secret_key');
+		
+		$this->cdn = true;
     }
 
     /**
