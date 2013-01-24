@@ -86,6 +86,10 @@ class repository_rackspace_cloud_files extends repository {
             // Disable CDN for the container
             $this->container->make_private();
         }
+        
+        $file = '/home/a/45f/file.txt';
+        $this->container->create_object($file);
+        $this->container->create_path($file);
     }
 
     public function get_listing($path='', $page = '') {
