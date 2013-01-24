@@ -50,22 +50,42 @@ class repository_rackspace_cloud_files extends repository {
 
         $this->username = get_config('rackspace_cloud_files', 'username');
         $this->api_key = get_config('rackspace_cloud_files', 'api_key');
-        $this->plugin_name = get_config('rackspace_cloud_files', 'pluginname');
-        $this->container_name = (strlen($this->plugin_name) > 0)? $this->plugin_name : get_string('default_container', 'repository_rackspace_cloud_files');
+        $plugin_name = get_config('rackspace_cloud_files', 'pluginname');
+        $this->container_name = (strlen($plugin_name) > 0)? $plugin_name : get_string('default_container', 'repository_rackspace_cloud_files');
         $this->cdn = !get_config('rackspace_cloud_files', 'cdn');
 
-
+        // Verify authentication information
         try {
             $this->auth = new CF_Authentication($this->username, $this->api_key);
             $this->auth->authenticate();
-            $this->conn = new CF_Connection($this->auth);
-            $this->container = $this->conn->get_container($this->container_name);
-
-            $obj = $this->container->create_object('test object.txt');
-            $obj->write('sample text');
         }
         catch (Exception $e) {
             throw new moodle_exception('repo_auth_fail', 'repository_rackspace_cloud_files');
+        }
+        
+        // Initialize the connection
+        $conn = new CF_Connection($this->auth);
+        // Get a list of all the available containers
+        $containers = $conn->list_containers();
+        // See if the container already exists
+        $container_exists = in_array($this->container_name, $containers);
+        
+        if ($container_exists) {
+            // Save a connection to the container
+            $this->container = $conn->get_container($this->container_name);
+        }
+        else {
+            // The container specified does not exists so create it.
+            $this->container = $conn->create_container($this->container_name);
+        }
+        
+        $cdn_enable = $this->cdn == 0;
+        if ($cdn_enable) {
+            // Enable CDN for the container
+            $this->container->make_public();
+        } else {
+            // Disable CDN for the container
+            $this->container->make_private();
         }
     }
 
@@ -91,38 +111,6 @@ class repository_rackspace_cloud_files extends repository {
             array('title'=>'filename1', 'date'=>'1340002147', 'size'=>'10451213', 'source'=>'http://www.moodle.com/dl.rar'),
             array('title'=>'folder', 'date'=>'1340002147', 'size'=>'0', 'children'=>array())
         );
-        
-        // // the management interface url
-        // $list['manage'] = false;
-        // // dynamically loading
-        // $list['dynload'] = true;
-        // // the current path of this list.
-        // // set to true, the login link will be removed
-        // $list['nologin'] = true;
-        // // set to true, the search button will be removed
-        // $list['nosearch'] = true;
-
-        // $tree = array();
-        
-        // if (empty($path)) {
-            // try {
-                // $objects = $this->auth->list_objects();
-            // } catch (Exception $e) {
-                // throw new moodle_exception('errorwhilecommunicatingwith', 'repository', '', $this->get_name());
-            // }
-            // foreach ($objects as $obj) {
-                // $folder = array(
-                    // 'title' => $obj,
-                    // 'children' => array(),
-                    // 'thumbnail' => $OUTPUT->pix_url(file_folder_icon(90))->out(false),
-                    // 'path' => $obj
-                    // );
-                // $tree[] = $folder;
-            // }
-        // } else {
-        
-        // }
-        // $list['list'] = $tree;
 
         return $list;
     }
@@ -167,12 +155,6 @@ class repository_rackspace_cloud_files extends repository {
     public static function type_form_validation($mform, $data, $errors) {
         $api_key = $data['api_key'];
         $username = $data['username'];
-        $plugin_name = $data['pluginname'];
-        $cdn_enable = ($data['cdn'] == 0);
-
-        // Determine the desired name for the container
-        $container_name = (strlen($plugin_name) > 0)? $plugin_name : get_string('default_container', 'repository_rackspace_cloud_files');
-
 
         if (!ctype_alnum($api_key) || !is_numeric('0x'.$api_key)) {
         // The API Key is not a hex string.  Throw a moodle error.
@@ -195,35 +177,10 @@ class repository_rackspace_cloud_files extends repository {
 
             //Now lets create a new instance of the authentication Class.
             $auth = new CF_Authentication($username, $api_key);
-
+            
             try {
                 //Calling the Authenticate method returns a valid storage token and allows you to connect to the CloudFiles Platform.
                 $auth->authenticate();
-
-                //The Connection Class Allows us to connect to CloudFiles and make changes to containers; Create, Delete, Return existing conta$
-                $conn = new CF_Connection($auth);
-
-                // Get a list of all the available containers
-                $containers = $conn->list_containers();
-
-                // See if the container already exists
-                $container_exists = in_array($container_name, $containers);
-
-                if ($container_exists) {
-                    // The container already exists
-                    $container = $conn->get_container($container_name);
-                } else {
-                    // The container specified does not exists so create it.
-                    $container = $conn->create_container($container_name);
-                }
-
-                if ($cdn_enable) {
-                    // Enable CDN for the container
-                    $container->make_public();
-                } else {
-                    // Disable CDN for the container
-                    $container->make_private();
-                }
             } catch (Exception $e) {
                 $errors['auth_error'] = get_string('auth_error', 'repository_rackspace_cloud_files').'<br />"'.$e->getMessage().'"';
             }
