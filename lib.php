@@ -110,28 +110,29 @@ class repository_rackspace_cloud_files extends repository {
     }
 	
 	public static function type_form_validation($mform, $data, $errors) {
-		if (!ctype_alnum($data['api_key']) || !is_numeric('0x'.$data['api_key'])) {
+		/*
+		 * Debug form data dictionary as keys and values.
+		 */
+		//$s = '';
+		//foreach ($data as $key => $value) {
+		//      $s = $s.', '.$key.'->'.$value;
+		//}
+		//$errors['auth_error'] = $s;
+
+		// Save the information the user provided
+		$this->user = $data['username']; // Username for Rackspace Cloud Files account
+		$this->api_key = $data['api_key']; // API_Key for account
+		$this->repo_name = $data['pluginname']; // Desired repository name
+		$this->cdn = ($data['cdn'] == get_string('on','repository_rackspace_cloud_files')); // CDN enabled
+			
+		if (!is_numeric('0x'.$this->api_key)) {
 			$errors['api_key'] = get_string('invalid_api_key', 'repository_rackspace_cloud_files');
 		}
-		elseif (strlen(trim($data['username'])) <=0) {
+		elseif (strlen(trim($this->user)) <=0) {
 			$errors['username'] = get_string('invalid_username', 'repository_rackspace_cloud_files');
 		} 
 		else
 		{
-			/*
-			 * Debug form data dictionary as keys and values.
-			 */
-			//$s = '';
-			//foreach ($data as $key => $value) {
-			//      $s = $s.', '.$key.'->'.$value;
-			//}
-			//$errors['auth_error'] = $s;
-			
-			$this->user = $data['username']; // Username for Rackspace Cloud Files account
-			$this->api_key = $data['api_key']; // API_Key for account
-			$this->repo_name = $data['pluginname']; // Desired repository name
-			$this->cdn = ($data['cdn'] == get_string('on','repository_rackspace_cloud_files')); // CDN enabled
-
 			//Now lets create a new instance of the authentication Class.
 			$this->auth = new CF_Authentication($this->user, $this->api_key);
 			try {
