@@ -63,15 +63,45 @@ class repository_rackspace_cloud_files extends repository {
     }
 
     public function get_listing($path='', $page = '') {
-        $list = array('ummm');
-        try {
-            $this->auth = new CF_Authentication($this->username, $this->api_key);
-            $this->auth->authenticate();
-            
-            $this->conn = new CF_Connection($this->auth);
-            $this->container = $this->conn->get_container($this->container_name);
+        global $CFG, $OUTPUT;
+        if (empty($this->api_key)) {
+            throw new moodle_exception('need_api_key', 'repository_rackspace_cloud_files');
+        }
+        elseif (empty($this->username)) {
+            throw new moodle_exception('need_username', 'repository_rackspace_cloud_files');
+        }
+        elseif (empty($this->container_name)) {
+            throw new moodle_exception('need_cont_name', 'repository_rackspace_cloud_files');
+        }
 
-            $list = $this->container->list_objects();
+        $list = array();
+        $list['list'] = array();
+        $list['path'] = array(
+            array('name' => get_string('pluginname', 'repository_rackspace_cloud_files'), 'path' => '')
+        );
+
+        // the management interface url
+        $list['manage'] = false;
+        // dynamically loading
+        $list['dynload'] = true;
+        // the current path of this list.
+        // set to true, the login link will be removed
+        $list['nologin'] = true;
+        // set to true, the search button will be removed
+        $list['nosearch'] = true;
+
+        $tree = array('asafasdfsd','asasdfafsd');
+        
+        $list['list'] = $tree;
+        
+        try {
+            // $this->auth = new CF_Authentication($this->username, $this->api_key);
+            // $this->auth->authenticate();
+            
+            // $this->conn = new CF_Connection($this->auth);
+            // $this->container = $this->conn->get_container($this->container_name);
+
+            // $list = $this->container->list_objects();
         }
         catch (Exception $e) {
             $list =  array('failed');

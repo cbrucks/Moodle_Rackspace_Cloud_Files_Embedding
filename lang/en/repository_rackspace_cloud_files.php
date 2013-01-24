@@ -55,5 +55,7 @@ $string['auth_error'] = 'Authentication unsuccessful!';
 /*
  * 
  */
-$string['search'] = 'This is a string';
-$string['cdn_info'] = 'CDN will cache files on servers closer to your users resulting in faster downloads of large files.';
+$string['need_api_key'] = 'API key is needed to access this repository.  Contact the administrator to restart the plugin.';
+$string['need_username'] = 'Username is needed to access this repository.  Contact the administrator to restart the plugin.';
+$string['need_cont_name'] = 'The container name is needed to access this repository.  Contact the administrator to restart the plugin.';
+ 
