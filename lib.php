@@ -113,7 +113,7 @@ class repository_rackspace_cloud_files extends repository {
     }
 	
 	public static function type_form_validation($mform, $data, $errors) {
-		$this->cdn = ($data['cdn'] == get_string('on','repository_rackspace_cloud_files'));
+		$this->save_user_info();
 	
 		if (!ctype_alnum($data['api_key']) || !is_numeric('0x'.$data['api_key'])) {
 			$errors['api_key'] = get_string('invalid_api_key', 'repository_rackspace_cloud_files');
@@ -177,6 +177,10 @@ class repository_rackspace_cloud_files extends repository {
 		}
 		
 		return $errors;
+	}
+	
+	public function save_user_info() {
+		
 	}
 
     /**
