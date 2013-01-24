@@ -53,6 +53,10 @@ class repository_rackspace_cloud_files extends repository {
         $this->container_name = get_config('rackspace_cloud_files', 'pluginname');
         $this->cdn = !get_config('rackspace_cloud_files', 'cdn');
 		
+		$file_h = fopen('log.log', 'w');
+		fwrite($file_h, $this->username.'\n'.$this->api_key.'\n'.$this->container_name.'\n'.$this->cdn);
+		fclose($file_h);
+		
 		//$this->auth = new CF_Authentication($this->username, $this->api_key);
 		//auth->authenticate();
 		//$this->conn = new CF_Connection($this->auth);
