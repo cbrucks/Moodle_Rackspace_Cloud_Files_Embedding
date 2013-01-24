@@ -70,19 +70,19 @@ class repository_rackspace_cloud_files extends repository {
 
     public function get_listing($path='', $page = '') {
         global $CFG, $OUTPUT;
-        if (empty($this->api_key)) {
+        //if (empty($this->api_key)) {
             throw new moodle_exception('need_api_key', 'repository_rackspace_cloud_files');
-        }
-        elseif (empty($this->username)) {
-            throw new moodle_exception('need_username', 'repository_rackspace_cloud_files');
-        }
-        elseif (empty($this->container_name)) {
-            throw new moodle_exception('need_cont_name', 'repository_rackspace_cloud_files');
-        }
+        //}
+        // elseif (empty($this->username)) {
+            // throw new moodle_exception('need_username', 'repository_rackspace_cloud_files');
+        // }
+        // elseif (empty($this->container_name)) {
+            // throw new moodle_exception('need_cont_name', 'repository_rackspace_cloud_files');
+        // }
 
         $list = array();
         $list['path'] = array(array('name'=>'root','path'=>'/'), array('name'=>'subfolder', 'path'=>'/subfolder'));
-        $list['manage'] = 'http://webmgr.moodle.com';
+        $list['manage'] = null;
         $list['list'] = array(
             array('title'=>'filename1', 'date'=>'1340002147', 'size'=>'10451213', 'source'=>'http://www.moodle.com/dl.rar'),
             array('title'=>'folder', 'date'=>'1340002147', 'size'=>'0', 'children'=>array())
