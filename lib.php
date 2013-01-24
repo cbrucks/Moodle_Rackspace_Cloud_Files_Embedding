@@ -147,7 +147,7 @@ class repository_rackspace_cloud_files extends repository {
 		return $errors;
 	}
 	
-	public static function plugin_init() {/*
+	/*public static function plugin_init() {
 		try {
 			//The Connection Class Allows us to connect to CloudFiles and make changes to containers; Create, Delete, Return existing conta$
 			$conn = new CF_Connection($this->auth);
@@ -186,7 +186,7 @@ class repository_rackspace_cloud_files extends repository {
 		} catch (Exception $e) {
 			$errors['auth_error'] = get_string('auth_error', 'repository_rackspace_cloud_files').'<br />"'.$e->getMessage().'"';
 		}
-	*/}
+	}*/
 
     /**
      * file types supported by youtube plugin
