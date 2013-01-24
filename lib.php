@@ -113,6 +113,8 @@ class repository_rackspace_cloud_files extends repository {
     }
 	
 	public static function type_form_validation($mform, $data, $errors) {
+		$this->cdn = ($data['cdn'] == get_string('on','repository_rackspace_cloud_files'));
+	
 		if (!ctype_alnum($data['api_key']) || !is_numeric('0x'.$data['api_key'])) {
 			$errors['api_key'] = get_string('invalid_api_key', 'repository_rackspace_cloud_files');
 		}
