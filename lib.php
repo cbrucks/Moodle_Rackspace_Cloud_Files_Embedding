@@ -37,6 +37,8 @@ require_once('cloudfiles.php');
 
 class repository_rackspace_cloud_files extends repository {
 
+	public $cdn;
+
     /**
      * Youtube plugin constructor
      * @param int $repositoryid
