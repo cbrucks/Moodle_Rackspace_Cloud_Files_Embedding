@@ -50,7 +50,8 @@ class repository_rackspace_cloud_files extends repository {
 
         $this->username = get_config('rackspace_cloud_files', 'username');
         $this->api_key = get_config('rackspace_cloud_files', 'api_key');
-        $this->container_name = get_config('rackspace_cloud_files', 'pluginname');
+        $this->plugin_name = get_config('rackspace_cloud_files', 'pluginname');
+        $this->container_name = (strlen($this->plugin_name) > 0)? $this->plugin_name : get_string('default_container', 'repository_rackspace_cloud_files');
         $this->cdn = !get_config('rackspace_cloud_files', 'cdn');
 
 
