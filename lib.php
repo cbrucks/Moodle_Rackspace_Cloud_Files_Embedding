@@ -128,9 +128,21 @@ class repository_rackspace_cloud_files extends repository {
         
         $objects = $this->container->get_objects();
         
+        $directories = array();
+        $files = array();
+        
+        foreach($objects as $obj) {
+            if (eregi('~[\w \/\\]+.[\w]+$~i', $obj->name) {
+                $files[] = $obj;
+            }
+            else {
+                $directories[] = $obj;
+            }
+        }
+        
         $l = array();
         
-        foreach ($objects as $obj) {
+        foreach ($files as $obj) {
             $l[] = array('title'=>$obj->name, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'source'=>$obj->public_uri());
         }
     
