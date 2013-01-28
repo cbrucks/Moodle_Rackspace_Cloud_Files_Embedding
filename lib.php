@@ -15,21 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This plugin is used to 
+ * This plugin is used to access youtube videos
  *
  * @since 2.0
- * @package    repository_rackspace_cloud_files
- * @copyright  
+ * @package    repository_youtube
+ * @copyright  2010 Dongsheng Cai {@link http://dongsheng.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once($CFG->dirroot . '/repository/lib.php'); //Includes the CloudFiles PHP API.. Ensure the API files are located in your Global includes folder or in the same directory
+require_once('cloudfiles.php');
+
 
 /**
- * repository_rackspace_cloud_files class
+ * repository_youtube class
  *
  * @since 2.0
- * @package    repository_rackspace_cloud_files
- * @copyright  
+ * @package    repository_youtube
+ * @copyright  2009 Dongsheng Cai {@link http://dongsheng.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -38,7 +40,7 @@ class repository_rackspace_cloud_files extends repository {
     public $cdn;
 
     /**
-     * Rackspace Cloud Files plugin constructor
+     * Youtube plugin constructor
      * @param int $repositoryid
      * @param object $context
      * @param array $options
@@ -109,16 +111,9 @@ class repository_rackspace_cloud_files extends repository {
             throw new moodle_exception('need_cont_name', 'repository_rackspace_cloud_files');
         }
 
-        //$subfolders = explode('/', $path);
-        //$nav = array();
-        //$prev_path = '';
-        //foreach ($subfolders as $sub) {
-        //    $prev_path .= $sub.'/';
-        //    $nav[] = array('name'=> $sub, 'path'=>$prev_path);
-        //}
 
         $list = array();
-        $list['path'] = array(array('name'=>'asdf', 'path'=>'/'));
+        $list['path'] = array(array('name'=>'root','path'=>'/'), array('name'=>'subfolder', 'path'=>'/subfolder'));
         $list['manage'] = null;
         $list['nologin'] = true;
         $list['dynload'] = true;
@@ -140,7 +135,7 @@ class repository_rackspace_cloud_files extends repository {
         foreach($objects as $obj) {
             if (preg_match('/^[^.]+\.[a-zA-Z0-9]+$/', $obj->name)) {
                 // Add reference as a file
-                $dir_list[] = array('title'=>str_replace($path.'/', '', $obj->name), 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'source'=>$obj->public_uri(), 'url'=>$obj->public_uri(), 'thumbnail'=>$this->container->cdn_uri.'/'.$obj->name);
+                $dir_list[] = array('title'=>str_replace($path.'/', '', $obj->name), 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'source'=>$this->container->cdn_uri.'/'.$obj->name, 'url'=>$this->container->cdn_uri.'/'.$obj->name, 'thumbnail'=>$this->container->cdn_uri.'/'.$obj->name);
             }
             else {
                 // Add reference as a folder
