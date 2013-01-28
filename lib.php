@@ -130,7 +130,7 @@ class repository_rackspace_cloud_files extends repository {
         
         if (empty($path)) {
             try {
-                $objects = $this->container->list_objects(,0,NULL,NULL, '/');
+                $objects = $this->container->list_objects(0,NULL,NULL, '/');
             } catch (Exception $e) {
                 throw new moodle_exception('errorwhilecommunicatingwith', 'repository', '', $this->get_name());
             }
@@ -139,7 +139,8 @@ class repository_rackspace_cloud_files extends repository {
                     'title' => $obj,
                     'children' => array(),
                     'thumbnail' => $OUTPUT->pix_url(file_folder_icon(90))->out(false),
-                    'path' => $obj
+                    'path' => $obj,
+                    'size' => '0'
                     );
                 $tree[] = $folder;
             }
