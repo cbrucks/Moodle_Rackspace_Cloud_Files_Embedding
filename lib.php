@@ -116,9 +116,14 @@ class repository_rackspace_cloud_files extends repository {
         $prev_dir = '';
         foreach ($subfolders as $sub) {
             if (empty($sub)) {
-                break;
+                continue;
             }
-            $prev_dir .= $sub.'/';
+            if (empty($prev_dir)) {
+                $prev_dir = $sub;
+            }
+            else {
+                $prev_dir .= '/'.$sub;
+            }
             $nav[] = array('name'=>$sub, 'path'=>$prev_dir);
         }
 
