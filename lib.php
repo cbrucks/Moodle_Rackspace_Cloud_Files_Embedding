@@ -15,23 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This plugin is used to access youtube videos
+ * This plugin is used to 
  *
  * @since 2.0
- * @package    repository_youtube
- * @copyright  2010 Dongsheng Cai {@link http://dongsheng.org}
+ * @package    repository_rackspace_cloud_files
+ * @copyright  
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once($CFG->dirroot . '/repository/lib.php'); //Includes the CloudFiles PHP API.. Ensure the API files are located in your Global includes folder or in the same directory
-require_once('cloudfiles.php');
-
 
 /**
- * repository_youtube class
+ * repository_rackspace_cloud_files class
  *
  * @since 2.0
- * @package    repository_youtube
- * @copyright  2009 Dongsheng Cai {@link http://dongsheng.org}
+ * @package    repository_rackspace_cloud_files
+ * @copyright  
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -40,7 +38,7 @@ class repository_rackspace_cloud_files extends repository {
     public $cdn;
 
     /**
-     * Youtube plugin constructor
+     * Rackspace Cloud Files plugin constructor
      * @param int $repositoryid
      * @param object $context
      * @param array $options
