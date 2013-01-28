@@ -54,9 +54,9 @@ class repository_rackspace_cloud_files extends repository {
 
         $this->init_connection();
 
-        $file = 'ver/crab/test file with weird stuff!.txt';
+        $file = 'ver/crab/more/container info.txt';
         $obj = $this->container->create_object($file);
-        $obj->write('test info');
+        $obj->write($this->container->__toString());
         $this->container->create_paths($file);
     }
 
@@ -121,21 +121,23 @@ class repository_rackspace_cloud_files extends repository {
     }
 
     private function get_rcf_object_list($path = '', $page = ''){
+        global $OUTPUT;
+
         if (empty($this->container)) {
             $this->init_connection();
         }
-        
+
         // Get all objects in designated path
         $objects = $this->container->get_objects(0, NULL, NULL, $path, '/');
 
         foreach($objects as $obj) {
             if (preg_match('/^[^.]+\.[a-zA-Z0-9]+$/', $obj->name)) {
                 // Add reference as a file
-                $dir_list[] = array('title'=>str_replace($path.'/', '', $obj->name), 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'source'=>$obj->public_uri());
+                $dir_list[] = array('title'=>str_replace($path.'/', '', $obj->name), 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'url'=>$this->container->cdn_uri.'/'.$obj->name);
             }
             else {
                 // Add reference as a folder
-                $dir_list[] = array('title'=>str_replace($path.'/', '', $obj->name), 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'path'=>$obj->name, 'children'=>array());
+                $dir_list[] = array('title'=>str_replace($path.'/', '', $obj->name), 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'path'=>$obj->name, 'children'=>array(), 'thumbnail' => $OUTPUT->pix_url(file_folder_icon(90))->out(false));
             }
         }
 
