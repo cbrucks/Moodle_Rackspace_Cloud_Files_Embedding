@@ -111,9 +111,19 @@ class repository_rackspace_cloud_files extends repository {
             throw new moodle_exception('need_cont_name', 'repository_rackspace_cloud_files');
         }
 
+        $subfolders = explode('/', $path);
+        $nav = array(array('name'=>'root', 'path'=>''));
+        $prev_dir = '';
+        foreach ($subfolders as $sub) {
+            if (empty($sub)) {
+                break;
+            }
+            $prev_dir .= $sub.'/';
+            $nav[] = array('name'=>$sub, 'path'=>$prev_dir);
+        }
 
         $list = array();
-        $list['path'] = array(array('name'=>'root','path'=>'/'), array('name'=>'subfolder', 'path'=>'/subfolder'));
+        $list['path'] = $nav; //array(array('name'=>'root','path'=>'/'), array('name'=>'subfolder', 'path'=>'/subfolder'));
         $list['manage'] = null;
         $list['nologin'] = true;
         $list['dynload'] = true;
