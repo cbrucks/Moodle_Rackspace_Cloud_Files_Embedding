@@ -130,7 +130,7 @@ class repository_rackspace_cloud_files extends repository {
         
         if ($path == '') {
             try {
-                $objects = $this->container->get_objects(0,NULL,NULL,NULL '/');
+                $objects = $this->container->get_objects(0,NULL,NULL,NULL, '/');
             } catch (Exception $e) {
                 throw new moodle_exception('errorwhilecommunicatingwith', 'repository', '', $this->get_name());
             }
