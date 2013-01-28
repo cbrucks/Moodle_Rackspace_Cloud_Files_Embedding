@@ -138,7 +138,6 @@ class repository_rackspace_cloud_files extends repository {
                 $folder = array(
                     'title' => $obj,
                     'children' => array(),
-                    'thumbnail' => $OUTPUT->pix_url(file_folder_icon(90))->out(false),
                     'path' => $obj,
                     'size' => '0'
                     );
@@ -148,7 +147,7 @@ class repository_rackspace_cloud_files extends repository {
             
         }
         
-        $tree[] = array('title'=>$path, 'date'=>'1340002147', 'size'=>'0', 'children'=>array());
+        $tree[] = array('title'=>$path, 'children'=>array(), 'path'=>'', 'size'=>'0');
         
         // $folders = $this->container->get_objects(0, NULL, NULL, NULL, '/');
         // $objects = $this->container->get_objects();
