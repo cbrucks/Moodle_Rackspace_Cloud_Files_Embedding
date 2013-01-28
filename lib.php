@@ -129,7 +129,7 @@ class repository_rackspace_cloud_files extends repository {
         $folders = $this->container->list_objects(0, NULL, NULL, '/');
         $objects = $this->container->get_objects();
         
-        $folders = array();
+        // $folders = array();
         $files = array();
         
         foreach($objects as $obj) {
