@@ -118,7 +118,7 @@ class repository_rackspace_cloud_files extends repository {
         //}
 
         $list = array();
-        //$list['path'] = $nav;
+        $list['path'] = array(array('name'=>'asdf', 'path'=>'/'));
         $list['manage'] = null;
         $list['nologin'] = true;
         $list['dynload'] = true;
@@ -140,7 +140,7 @@ class repository_rackspace_cloud_files extends repository {
         foreach($objects as $obj) {
             if (preg_match('/^[^.]+\.[a-zA-Z0-9]+$/', $obj->name)) {
                 // Add reference as a file
-                $dir_list[] = array('title'=>str_replace($path.'/', '', $obj->name), 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'source'=>$obj->public_uri(), 'url'=>$obj->public_uri(), 'thumbnail'=>$obj->public_uri());
+                $dir_list[] = array('title'=>str_replace($path.'/', '', $obj->name), 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'source'=>$obj->public_uri(), 'url'=>$obj->public_uri(), 'thumbnail'=>$this->container->cdn_uri.'/'.$obj->name);
             }
             else {
                 // Add reference as a folder
