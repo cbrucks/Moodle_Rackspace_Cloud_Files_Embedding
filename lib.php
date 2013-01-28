@@ -55,13 +55,13 @@ class repository_rackspace_cloud_files extends repository {
         $this->cdn_enable = get_config('rackspace_cloud_files', 'cdn') == 0;
 
         $this->init_connection();
-        
+
         $file = 'ver/crab/test file with weird stuff!.txt';
         $obj = $this->container->create_object($file);
         $obj->write('test info');
         $this->container->create_paths($file);
     }
-    
+
     private function init_connection() {
         // Verify authentication information
         try {
@@ -71,14 +71,14 @@ class repository_rackspace_cloud_files extends repository {
         catch (Exception $e) {
             throw new moodle_exception('repo_auth_fail', 'repository_rackspace_cloud_files');
         }
-        
+
         // Initialize the connection
         $conn = new CF_Connection($this->auth);
         // Get a list of all the available containers
         $containers = $conn->list_containers();
         // See if the container already exists
         $container_exists = in_array($this->container_name, $containers);
-        
+
         if ($container_exists) {
             // Save a connection to the container
             $this->container = $conn->get_container($this->container_name);
@@ -87,7 +87,7 @@ class repository_rackspace_cloud_files extends repository {
             // The container specified does not exists so create it.
             $this->container = $conn->create_container($this->container_name);
         }
-        
+
         if ($this->cdn_enable) {
             // Enable CDN for the container
             $this->container->make_public();
@@ -99,7 +99,7 @@ class repository_rackspace_cloud_files extends repository {
 
     public function get_listing($path='', $page = '') {
         global $CFG, $OUTPUT;
-        
+
         // Check for required information
         if (empty($this->api_key)) {
             throw new moodle_exception('need_api_key', 'repository_rackspace_cloud_files');
@@ -111,51 +111,40 @@ class repository_rackspace_cloud_files extends repository {
             throw new moodle_exception('need_cont_name', 'repository_rackspace_cloud_files');
         }
 
-        
+
         $list = array();
         $list['path'] = array(array('name'=>'root','path'=>'/'), array('name'=>'subfolder', 'path'=>'/subfolder'));
         $list['manage'] = null;
         $list['nologin'] = true;
-        $list['list'] = $this->get_rcf_object_list($path, $path);
+        $list['dynload'] = true;
+        $list['list'] = $this->get_rcf_object_list($path, $page);
 
         return $list;
     }
-    
+
     private function get_rcf_object_list($path = '', $page = ''){
         if (empty($this->container)) {
             $this->init_connection();
         }
-        
-        $folders = $this->container->list_objects(0, NULL, NULL, '/');
-        $objects = $this->container->get_objects();
-        
-        // $folders = array();
-        $files = array();
-        
+
+        $objects = $this->container->get_objects(0, NULL, NULL, $path, '/');
+
         foreach($objects as $obj) {
-            
             if (preg_match('/^[^.]+\.[a-zA-Z0-9]+$/', $obj->name)) {
-                $files[] = $obj;
+                // Add reference as a file
+                $dir_list[] = array('title'=>str_replace($path.'/', '', $obj->name), 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'source'=>$obj->public_uri());
             }
             else {
-                // $folders[] = $obj;
+                // Add reference as a folder
+                $dir_list[] = array('title'=>str_replace($path.'/', '', $obj->name), 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'path'=>$obj->name, 'children'=>array());
             }
         }
-        
-        $dir_list = array();
-        
-        foreach ($folders as $obj) {
-            $dir_list[] = array('title'=>$obj->name, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'children'=>array());
-        }
-        foreach ($files as $obj) {
-            $dir_list[] = array('title'=>$obj->name, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'source'=>'asdfasdf');
-        }
-    
+
         // $dir_list = array(
             // array('title'=>'filename1', 'date'=>'1340002147', 'size'=>'10451213', 'source'=>'http://www.moodle.com/dl.rar'),
             // array('title'=>'folder', 'date'=>'1340002147', 'size'=>'0', 'children'=>array())
         // );
-        
+
         return $dir_list;
     }
 
@@ -166,7 +155,7 @@ class repository_rackspace_cloud_files extends repository {
     public static function get_type_option_names() {
         return array('username', 'api_key', 'pluginname', 'cdn');
     }
-	
+
     public static function type_config_form($mform, $classname = 'repository') {
         parent::type_config_form($mform);
         $strrequired = get_string('required');
@@ -195,7 +184,7 @@ class repository_rackspace_cloud_files extends repository {
         $mform->addRule('username', $strrequired, 'required', null, 'client');
         $mform->addRule('api_key', $strrequired, 'required', null, 'client');
     }
-	
+
     public static function type_form_validation($mform, $data, $errors) {
         $api_key = $data['api_key'];
         $username = $data['username'];
@@ -221,7 +210,7 @@ class repository_rackspace_cloud_files extends repository {
 
             //Now lets create a new instance of the authentication Class.
             $auth = new CF_Authentication($username, $api_key);
-            
+
             try {
                 //Calling the Authenticate method returns a valid storage token and allows you to connect to the CloudFiles Platform.
                 $auth->authenticate();
