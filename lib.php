@@ -156,7 +156,7 @@ class repository_rackspace_cloud_files extends repository {
             // array('title'=>'folder', 'date'=>'1340002147', 'size'=>'0', 'children'=>array())
         // );
         
-        return $tree;
+        return $dir_listing;
     }
 
     public function global_search() {
