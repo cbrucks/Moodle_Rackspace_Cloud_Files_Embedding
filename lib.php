@@ -126,9 +126,9 @@ class repository_rackspace_cloud_files extends repository {
             $this->init_connection();
         }
         
-        $objects = $this->container->get_objects(0, NULL, NULL, '');
+        $objects = $this->container->get_objects(0, NULL, NULL, $path);
         
-        $directories = array();
+        $folders = array();
         $files = array();
         
         foreach($objects as $obj) {
@@ -136,14 +136,17 @@ class repository_rackspace_cloud_files extends repository {
                 $files[] = $obj;
             }
             else {
-                $directories[] = $obj;
+                $folders[] = $obj;
             }
         }
         
         $dir_list = array();
         
-        foreach ($objects as $obj) {
-            $dir_list[] = array('title'=>$obj->name, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'source'=>$obj->public_uri());
+        foreach ($folders as $obj) {
+            $dir_list[] = array('title'=>$obj->name, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'children'=>array());
+        }
+        foreach ($folders as $obj) {
+            $dir_list[] = array('title'=>$obj->name, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'source'=>'asdfasdf');
         }
     
         // $dir_list = array(
