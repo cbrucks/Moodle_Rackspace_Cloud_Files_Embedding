@@ -126,7 +126,8 @@ class repository_rackspace_cloud_files extends repository {
         if (empty($this->container)) {
             $this->init_connection();
         }
-
+        
+        // Get all objects in designated path
         $objects = $this->container->get_objects(0, NULL, NULL, $path, '/');
 
         foreach($objects as $obj) {
