@@ -167,10 +167,10 @@ class repository_rackspace_cloud_files extends repository {
         $tree = array();
         
         foreach ($folders as $folder) {
-            $dir_list[] = array('title'=>$folder, 'date'=>'', 'size'=>'', 'children'=>$this->build_dir_tree($path.$folder));
+            $tree[] = array('title'=>$folder, 'date'=>'1340002147', 'size'=>'0', 'children'=>$this->build_dir_tree($path.$folder));
         }
         
-        return $folders;
+        return $tree;
     }
 
     public function global_search() {
