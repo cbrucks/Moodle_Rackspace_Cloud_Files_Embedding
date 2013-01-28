@@ -131,7 +131,7 @@ class repository_rackspace_cloud_files extends repository {
         $list['path'] = $nav; //array(array('name'=>'root','path'=>'/'), array('name'=>'subfolder', 'path'=>'/subfolder'));
         $list['manage'] = null;
         $list['nologin'] = true;
-        $list['dynload'] = true;
+        $list['dynload'] = false;
         $list['list'] = $this->get_rcf_object_list($path, $page);
 
         return $list;
@@ -164,6 +164,37 @@ class repository_rackspace_cloud_files extends repository {
         // );
 
         return $dir_list;
+    }
+
+    public function search($search_text, $page = 0) {
+        $ret = array();
+        $ret['dynload'] = true;
+        $ret['nologin'] = true;
+        $ret['list'] = array();
+
+        if (empty($this->container)) {
+            $this->init_connection();
+        }
+
+        // Get all objects in designated path
+        $objects = $this->container->get_objects();
+
+        $search_res = array();
+
+        foreach ($objects as $obj) {
+            if (preg_match('/^[^.]+\.[a-zA-Z0-9]+$/', $obj->name)) {
+                $search_res[] = array('title'=>$obj->name, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'source'=>$this->container->cdn_uri.'/'.$obj->name, 'url'=>$this->container->cdn_uri.'/'.$obj->name, 'thumbnail'=>$this->container->cdn_uri.'/'.$obj->name);
+            }
+            else {
+                // Add reference as a folder
+//                $search_res[] = array('title'=>$obj->name, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'path'=>$obj->name, 'children'=>array(), 'thumbnail' => $OUTPUT->pix_url(file_folder_icon(90))->out(false));
+            }
+        }
+
+        $ret['list'] = $search_res;
+
+        return $ret;
+
     }
 
     public function global_search() {
