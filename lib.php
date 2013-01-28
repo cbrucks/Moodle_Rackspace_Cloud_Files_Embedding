@@ -126,18 +126,15 @@ class repository_rackspace_cloud_files extends repository {
             $this->init_connection();
         }
         
-        $objects = $this->container->get_objects(0, NULL, NULL, $path);
+        $folders = $this->container->get_objects(0, NULL, NULL, $path, '/');
+        $objects = $this->container->get_objects();
         
         $folders = array();
         $files = array();
         
         foreach($objects as $obj) {
-            
             if (preg_match('/^[^.]+\.[a-zA-Z0-9]+$/', $obj->name)) {
                 $files[] = $obj;
-            }
-            else {
-                $folders[] = $obj;
             }
         }
         
