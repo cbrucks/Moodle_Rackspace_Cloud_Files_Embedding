@@ -109,20 +109,19 @@ class repository_rackspace_cloud_files extends repository {
             throw new moodle_exception('need_cont_name', 'repository_rackspace_cloud_files');
         }
 
-        $subfolders = explode('/', $path);
-        $nav = array();
-        $prev_path = '';
-        foreach ($subfolders as $sub) {
-            $prev_path .= $sub.'/';
-            $nav[] = array('name'=> $sub, 'path'=>$prev_path);
-        }
+        //$subfolders = explode('/', $path);
+        //$nav = array();
+        //$prev_path = '';
+        //foreach ($subfolders as $sub) {
+        //    $prev_path .= $sub.'/';
+        //    $nav[] = array('name'=> $sub, 'path'=>$prev_path);
+        //}
 
         $list = array();
-        $list['path'] = $nav;
+        //$list['path'] = $nav;
         $list['manage'] = null;
         $list['nologin'] = true;
         $list['dynload'] = true;
-        $list['upload'] = array('label'=>'new_form', 'id'=>'new_id');
         $list['list'] = $this->get_rcf_object_list($path, $page);
 
         return $list;
