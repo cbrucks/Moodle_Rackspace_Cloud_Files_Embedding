@@ -147,7 +147,6 @@ class repository_rackspace_cloud_files extends repository {
         foreach ($folders as $obj) {
             $dir_list[] = array('title'=>$obj->name, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'children'=>array());
         }
-        $dir_list[] = array('title'=>$path, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'children'=>array());
         foreach ($files as $obj) {
             $dir_list[] = array('title'=>$obj->name, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'source'=>'asdfasdf');
         }
@@ -158,6 +157,12 @@ class repository_rackspace_cloud_files extends repository {
         // );
         
         return $dir_list;
+    }
+    
+    private function build_dir_tree($path = '') {
+        $folders = $this->container->list_objects(0, NULL, NULL, $path);
+        
+        return $folders;
     }
 
     public function global_search() {
