@@ -126,53 +126,30 @@ class repository_rackspace_cloud_files extends repository {
             $this->init_connection();
         }
         
-        $tree = array();
+        $folders = $this->container->get_objects(0, NULL, NULL, NULL, '/');
+        $objects = $this->container->get_objects();
         
-        if ($path == '' || $patch == '/') {
-            try {
-                $objects = $this->container->get_objects(0,NULL,NULL,'', '/');
-            } catch (Exception $e) {
-                throw new moodle_exception('errorwhilecommunicatingwith', 'repository', '', $this->get_name());
-            }
-            foreach ($objects as $obj) {
-                $folder = array(
-                    'title' => $obj->name,
-                    'children' => array(),
-                    'path' => $obj->name,
-                    'size' => '0'
-                    );
-                $tree[] = $folder;
-            }
-        } else {
+        $folders = array();
+        $files = array();
+        
+        foreach($objects as $obj) {
             
+            if (preg_match('/^[^.]+\.[a-zA-Z0-9]+$/', $obj->name)) {
+                $files[] = $obj;
+            }
+            else {
+                // $folders[] = $obj;
+            }
         }
         
-        $tree[] = array('title'=>$path, 'children'=>array(), 'path'=>'', 'size'=>'0');
+        $dir_list = array();
         
-        // $folders = $this->container->get_objects(0, NULL, NULL, NULL, '/');
-        // $objects = $this->container->get_objects();
-        
-        // $folders = array();
-        // $files = array();
-        
-        // foreach($objects as $obj) {
-            
-            // if (preg_match('/^[^.]+\.[a-zA-Z0-9]+$/', $obj->name)) {
-                // $files[] = $obj;
-            // }
-            // else {
-                // $folders[] = $obj;
-            // }
-        // }
-        
-        // $dir_list = array();
-        
-        // foreach ($folders as $obj) {
-            // $dir_list[] = array('title'=>$obj->name, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'children'=>array());
-        // }
-        // foreach ($files as $obj) {
-            // $dir_list[] = array('title'=>$obj->name, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'source'=>'asdfasdf');
-        // }
+        foreach ($folders as $obj) {
+            $dir_list[] = array('title'=>$obj->name, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'children'=>array());
+        }
+        foreach ($files as $obj) {
+            $dir_list[] = array('title'=>$obj->name, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'source'=>'asdfasdf');
+        }
     
         // $dir_list = array(
             // array('title'=>'filename1', 'date'=>'1340002147', 'size'=>'10451213', 'source'=>'http://www.moodle.com/dl.rar'),
