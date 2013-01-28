@@ -133,7 +133,7 @@ class repository_rackspace_cloud_files extends repository {
         
         foreach($objects as $obj) {
             
-            if (preg_match('/^[!\.]+\.[a-zA-Z0-9]+$/', $obj->name)) {
+            if (preg_match('/^[^.]+\.[a-zA-Z0-9]+$/', $obj->name)) {
                 $files[] = $obj;
             }
             else {
