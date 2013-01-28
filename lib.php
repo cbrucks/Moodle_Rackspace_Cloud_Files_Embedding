@@ -113,12 +113,12 @@ class repository_rackspace_cloud_files extends repository {
         $nav = array();
         $prev_path = '';
         foreach ($subfolders as $sub) {
-            prev_path .= '/'.$sub;
-            $nav[] = array('name'=> $sub, 'path'=>prev_path);
+            $prev_path .= '/'.$sub;
+            $nav[] = array('name'=> $sub, 'path'=>$prev_path);
         }
 
         $list = array();
-        $list['path'] = array(array('name'=>'root','path'=>'/'), array('name'=>'subfolder', 'path'=>'/subfolder'));
+        $list['path'] = $nav;
         $list['manage'] = null;
         $list['nologin'] = true;
         $list['dynload'] = true;
