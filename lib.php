@@ -135,7 +135,7 @@ class repository_rackspace_cloud_files extends repository {
         foreach($objects as $obj) {
             if (preg_match('/^[^.]+\.[a-zA-Z0-9]+$/', $obj->name)) {
                 // Add reference as a file
-                $dir_list[] = array('title'=>str_replace($path.'/', '', $obj->name), 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'source'=>$this->container->cdn_uri.'/'.$obj->name);
+                $dir_list[] = array('title'=>str_replace($path.'/', '', $obj->name), 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'url'=>$this->container->cdn_uri.'/'.$obj->name);
             }
             else {
                 // Add reference as a folder
