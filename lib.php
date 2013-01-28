@@ -131,14 +131,14 @@ class repository_rackspace_cloud_files extends repository {
         $directories = array();
         $files = array();
         
-        // foreach($objects as $obj) {
-            // if (eregi('~[\w \/\\]+.[\w]+$~i', $obj->name) {
-                // $files[] = $obj;
-            // }
-            // else {
-                // $directories[] = $obj;
-            // }
-        // }
+        foreach($objects as $obj) {
+            if (eregi('(.\w+$)', $obj->name) {
+                $files[] = $obj;
+            }
+            else {
+                $directories[] = $obj;
+            }
+        }
         
         $dir_list = array();
         
