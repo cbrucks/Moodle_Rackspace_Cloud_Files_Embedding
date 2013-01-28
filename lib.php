@@ -126,7 +126,9 @@ class repository_rackspace_cloud_files extends repository {
             $this->init_connection();
         }
         
-        $folders = $this->container->get_objects(0, NULL, NULL, NULL, '/');
+        $dir_list = build_dir_tree();
+        
+        // $folders = $this->container->get_objects(0, NULL, NULL, NULL, '/');
         // $objects = $this->container->get_objects();
         
         // $folders = array();
@@ -142,14 +144,14 @@ class repository_rackspace_cloud_files extends repository {
             // }
         // }
         
-        $dir_list = array();
+        // $dir_list = array();
         
-        foreach ($folders as $obj) {
-            $dir_list[] = array('title'=>$obj->name, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'children'=>array());
-        }
-        foreach ($files as $obj) {
-            $dir_list[] = array('title'=>$obj->name, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'source'=>'asdfasdf');
-        }
+        // foreach ($folders as $obj) {
+            // $dir_list[] = array('title'=>$obj->name, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'children'=>array());
+        // }
+        // foreach ($files as $obj) {
+            // $dir_list[] = array('title'=>$obj->name, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'source'=>'asdfasdf');
+        // }
     
         // $dir_list = array(
             // array('title'=>'filename1', 'date'=>'1340002147', 'size'=>'10451213', 'source'=>'http://www.moodle.com/dl.rar'),
@@ -161,6 +163,12 @@ class repository_rackspace_cloud_files extends repository {
     
     private function build_dir_tree($path = '') {
         $folders = $this->container->list_objects(0, NULL, NULL, $path);
+        
+        $tree = array();
+        
+        foreach ($folders as $folder) {
+            $dir_list[] = array('title'=>$folder, 'date'=>'', 'size'=>'', 'children'=>$this->build_dir_tree($path.$folder));
+        }
         
         return $folders;
     }
