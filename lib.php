@@ -140,18 +140,18 @@ class repository_rackspace_cloud_files extends repository {
             }
         }
         
-        $l = array();
+        $dir_list = array();
         
         foreach ($files as $obj) {
-            $l[] = array('title'=>$obj->name, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'source'=>$obj->public_uri());
+            $dir_list[] = array('title'=>$obj->name, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'source'=>$obj->public_uri());
         }
     
-        // $l = array(
+        // $dir_list = array(
             // array('title'=>'filename1', 'date'=>'1340002147', 'size'=>'10451213', 'source'=>'http://www.moodle.com/dl.rar'),
             // array('title'=>'folder', 'date'=>'1340002147', 'size'=>'0', 'children'=>array())
         // );
         
-        return $l;
+        return $dir_list;
     }
 
     public function global_search() {
