@@ -111,12 +111,20 @@ class repository_rackspace_cloud_files extends repository {
             throw new moodle_exception('need_cont_name', 'repository_rackspace_cloud_files');
         }
 
+        $subfolders = explode('/', $path);
+        $nav = array();
+        $prev_path = '';
+        foreach ($subfolders as $sub) {
+            prev_path .= '/'.$sub;
+            $nav[] = array('name'=> $sub, 'path'=>prev_path);
+        }
 
         $list = array();
         $list['path'] = array(array('name'=>'root','path'=>'/'), array('name'=>'subfolder', 'path'=>'/subfolder'));
         $list['manage'] = null;
         $list['nologin'] = true;
         $list['dynload'] = true;
+        $list['upload'] = array('label'=>'new_form', 'id'=>'new_id');
         $list['list'] = $this->get_rcf_object_list($path, $page);
 
         return $list;
@@ -135,7 +143,7 @@ class repository_rackspace_cloud_files extends repository {
         foreach($objects as $obj) {
             if (preg_match('/^[^.]+\.[a-zA-Z0-9]+$/', $obj->name)) {
                 // Add reference as a file
-                $dir_list[] = array('title'=>str_replace($path.'/', '', $obj->name), 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'source'=>$this->container->cdn_uri.'/'.$obj->name, 'url'=>$this->container->cdn_uri.'/'.$obj->name, 'thumbnail'=>$this->container->cdn_uri.'/'.$obj->name);
+                $dir_list[] = array('title'=>str_replace($path.'/', '', $obj->name), 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'source'=>$obj->public_uri(), 'url'=>$obj->public_uri(), 'thumbnail'=>$this->container->cdn_uri.'/'.$obj->name);
             }
             else {
                 // Add reference as a folder
