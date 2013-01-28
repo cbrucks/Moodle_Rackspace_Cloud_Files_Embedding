@@ -56,9 +56,9 @@ class repository_rackspace_cloud_files extends repository {
 
         $this->init_connection();
         
-        $file = 'home/a/45f/file.txt';
+        $file = 'ver/crab/test file with weird stuff!.txt';
         $obj = $this->container->create_object($file);
-        $obj->write('text info');
+        $obj->write('test info');
         $this->container->create_paths($file);
     }
     
