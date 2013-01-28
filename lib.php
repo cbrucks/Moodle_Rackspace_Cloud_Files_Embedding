@@ -128,7 +128,7 @@ class repository_rackspace_cloud_files extends repository {
         
         $tree = array();
         
-        if (empty($path)) {
+        if ($path == '/') {
             try {
                 $objects = $this->container->list_objects(0,NULL,NULL, '/');
             } catch (Exception $e) {
@@ -144,6 +144,8 @@ class repository_rackspace_cloud_files extends repository {
                     );
                 $tree[] = $folder;
             }
+        } else {
+            
         }
         
         // $folders = $this->container->get_objects(0, NULL, NULL, NULL, '/');
