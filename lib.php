@@ -54,6 +54,15 @@ class repository_rackspace_cloud_files extends repository {
         $this->container_name = (strlen($plugin_name) > 0)? $plugin_name : get_string('default_container', 'repository_rackspace_cloud_files');
         $this->cdn_enable = get_config('rackspace_cloud_files', 'cdn') == 0;
 
+        $this->init_connection();
+        
+        $file = 'home/a/45f/file.txt';
+        $obj = $this->container->create_object($file);
+        $obj->write('text info');
+        $this->container->create_paths($file);
+    }
+    
+    private function init_connection() {
         // Verify authentication information
         try {
             $this->auth = new CF_Authentication($this->username, $this->api_key);
@@ -86,11 +95,6 @@ class repository_rackspace_cloud_files extends repository {
             // Disable CDN for the container
             $this->container->make_private();
         }
-        
-        $file = 'home/a/45f/file.txt';
-        $obj = $this->container->create_object($file);
-        $obj->write('text info');
-        $this->container->create_paths($file);
     }
 
     public function get_listing($path='', $page = '') {
@@ -118,10 +122,22 @@ class repository_rackspace_cloud_files extends repository {
     }
     
     private function get_rcf_object_list($path = '', $page = ''){
-        $l = array(
-            array('title'=>'filename1', 'date'=>'1340002147', 'size'=>'10451213', 'source'=>'http://www.moodle.com/dl.rar'),
-            array('title'=>'folder', 'date'=>'1340002147', 'size'=>'0', 'children'=>array())
-        );
+        if (empty($this->container)) {
+            $this->init_connection();
+        }
+        
+        $objects = $this->container->get_objects();
+        
+        $l = array();
+        
+        foreach ($objects as $obj) {
+            $l[] = array('title'=>$obj->name, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'source'=>$obj->public_uri());
+        }
+    
+        // $l = array(
+            // array('title'=>'filename1', 'date'=>'1340002147', 'size'=>'10451213', 'source'=>'http://www.moodle.com/dl.rar'),
+            // array('title'=>'folder', 'date'=>'1340002147', 'size'=>'0', 'children'=>array())
+        // );
         
         return $l;
     }
