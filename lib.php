@@ -142,7 +142,7 @@ class repository_rackspace_cloud_files extends repository {
         
         $dir_list = array();
         
-        foreach ($files as $obj) {
+        foreach ($objects as $obj) {
             $dir_list[] = array('title'=>$obj->name, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'source'=>$obj->public_uri());
         }
     
