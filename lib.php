@@ -126,7 +126,7 @@ class repository_rackspace_cloud_files extends repository {
             $this->init_connection();
         }
         
-        $objects = $this->container->get_objects($path = '', $delimiter = '/');
+        $objects = $this->container->get_objects($path = 'home', $delimiter = '/');
         
         $directories = array();
         $files = array();
