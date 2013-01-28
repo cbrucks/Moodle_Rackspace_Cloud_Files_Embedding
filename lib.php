@@ -126,6 +126,8 @@ class repository_rackspace_cloud_files extends repository {
             $this->init_connection();
         }
         
+        $tree = array();
+        
         if (empty($path)) {
             try {
                 $objects = $this->container->list_objects(,0,NULL,NULL, '/');
