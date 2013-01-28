@@ -126,7 +126,22 @@ class repository_rackspace_cloud_files extends repository {
             $this->init_connection();
         }
         
-        $dir_list = build_dir_tree();
+        if (empty($path)) {
+            try {
+                $objects = $this->container->list_objects(,0,NULL,NULL, '/');
+            } catch (Exception $e) {
+                throw new moodle_exception('errorwhilecommunicatingwith', 'repository', '', $this->get_name());
+            }
+            foreach ($objects as $obj) {
+                $folder = array(
+                    'title' => $obj,
+                    'children' => array(),
+                    'thumbnail' => $OUTPUT->pix_url(file_folder_icon(90))->out(false),
+                    'path' => $obj
+                    );
+                $tree[] = $folder;
+            }
+        }
         
         // $folders = $this->container->get_objects(0, NULL, NULL, NULL, '/');
         // $objects = $this->container->get_objects();
@@ -157,18 +172,6 @@ class repository_rackspace_cloud_files extends repository {
             // array('title'=>'filename1', 'date'=>'1340002147', 'size'=>'10451213', 'source'=>'http://www.moodle.com/dl.rar'),
             // array('title'=>'folder', 'date'=>'1340002147', 'size'=>'0', 'children'=>array())
         // );
-        
-        return $dir_list;
-    }
-    
-    private function build_dir_tree($path = '') {
-        $folders = $this->container->list_objects(0, NULL, NULL, $path);
-        
-        $tree = array();
-        
-        foreach ($folders as $folder) {
-            $tree[] = array('title'=>$folder, 'date'=>'1340002147', 'size'=>'0', 'children'=>$this->build_dir_tree($path.$folder));
-        }
         
         return $tree;
     }
