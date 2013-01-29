@@ -56,10 +56,23 @@ class repository_rackspace_cloud_files extends repository {
 
         $this->init_connection();
 
-        $file = 'ver/crab/more/container info.txt';
-        $obj = $this->container->create_object($file);
-        $obj->write($this->container->__toString());
-        $this->container->create_paths($file);
+        $up = !empty(optional_param('rcf_upload', '', PARAM_RAW));
+        $link = !empty(optional_param('rcf_link', '', PARAM_RAW));
+
+        if ($up && !$link) {
+            $this->upload = TRUE;
+        }
+        elseif (!$up && $link) {
+            $this->upload = FALSE;
+        }
+        else {
+            $this->upload = NULL;
+        }
+
+//        $file = 'ver/crab/more/container info.txt';
+//        $obj = $this->container->create_object($file);
+//        $obj->write($this->container->__toString());
+//        $this->container->create_paths($file);
     }
 
     private function init_connection() {
@@ -97,10 +110,6 @@ class repository_rackspace_cloud_files extends repository {
         }
     }
 
-    public function check_login() {
-        return false;
-    }
-
     public function print_login() {
          if ($this->options['ajax']) {
             $user_field = new stdClass();
@@ -126,6 +135,11 @@ class repository_rackspace_cloud_files extends repository {
             echo '<input type="submit" value="'.get_string('enter', 'repository').'" />';
         }
     }
+
+    public function check_login() {
+        return $this->upload;
+    }
+
 
     public function get_listing($path='', $page = '') {
         global $CFG, $OUTPUT;
