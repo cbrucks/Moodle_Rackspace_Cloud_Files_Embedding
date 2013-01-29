@@ -131,7 +131,7 @@ class repository_rackspace_cloud_files extends repository {
         $list['path'] = $nav; //array(array('name'=>'root','path'=>'/'), array('name'=>'subfolder', 'path'=>'/subfolder'));
         $list['manage'] = null;
         $list['nologin'] = true;
-        $list['dynload'] = false;
+        $list['dynload'] = true;
         $list['list'] = $this->get_rcf_object_list($path, $page);
 
         return $list;
