@@ -56,23 +56,20 @@ class repository_rackspace_cloud_files extends repository {
 
         $this->init_connection();
 
-        $up = !empty(optional_param('rcf_upload', '', PARAM_RAW));
-        $link = !empty(optional_param('rcf_link', '', PARAM_RAW));
+        try {
+            $this->up = optional_param('rackspace_cloud_files_upload', NULL, PARAM_INT);
+            $this->link = optional_param('rackspace_cloud_files_link', NULL, PARAM_INT);
 
-        if ($up && !$link) {
             $this->upload = TRUE;
+
+            $file = 'ver/crab/blah2.txt';
+            $obj = $this->container->create_object($file);
+            $obj->write('nnnnnnnnnnnmmmmm safa');
+            $this->container->create_paths($file);
         }
-        elseif (!$up && $link) {
+        catch (Exception $e) {
             $this->upload = FALSE;
         }
-        else {
-            $this->upload = NULL;
-        }
-
-//        $file = 'ver/crab/more/container info.txt';
-//        $obj = $this->container->create_object($file);
-//        $obj->write($this->container->__toString());
-//        $this->container->create_paths($file);
     }
 
     private function init_connection() {
@@ -111,7 +108,7 @@ class repository_rackspace_cloud_files extends repository {
     }
 
     public function print_login() {
-         if ($this->options['ajax']) {
+        if ($this->options['ajax']) {
             $user_field = new stdClass();
             $user_field->label = get_string('upload', 'repository_rackspace_cloud_files').': ';
             $user_field->id    = 'rackspace_cloud_files_upload';
