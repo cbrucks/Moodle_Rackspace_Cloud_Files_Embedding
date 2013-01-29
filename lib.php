@@ -97,6 +97,36 @@ class repository_rackspace_cloud_files extends repository {
         }
     }
 
+    public function check_login() {
+        return false;
+    }
+
+    public function print_login() {
+         if ($this->options['ajax']) {
+            $user_field = new stdClass();
+            $user_field->label = get_string('upload', 'repository_rackspace_cloud_files').': ';
+            $user_field->id    = 'rackspace_cloud_files_upload';
+            $user_field->type  = 'checkbox';
+            $user_field->name  = 'rcf_upload';
+
+            $passwd_field = new stdClass();
+            $passwd_field->label = get_string('link', 'repository_rackspace_cloud_files').': ';
+            $passwd_field->id    = 'rackspace_cloud_files_link';
+            $passwd_field->type  = 'checkbox';
+            $passwd_field->name  = 'rcf_link';
+
+            $ret = array();
+            $ret['login'] = array($user_field, $passwd_field);
+            return $ret;
+        } else {
+            echo '<table>';
+            echo '<tr><td><label>TODO: build html representation of login screen</label></td>';
+            echo '</tr>';
+            echo '</table>';
+            echo '<input type="submit" value="'.get_string('enter', 'repository').'" />';
+        }
+    }
+
     public function get_listing($path='', $page = '') {
         global $CFG, $OUTPUT;
 
@@ -130,7 +160,7 @@ class repository_rackspace_cloud_files extends repository {
         $list = array();
         $list['path'] = $nav; //array(array('name'=>'root','path'=>'/'), array('name'=>'subfolder', 'path'=>'/subfolder'));
         $list['manage'] = null;
-        $list['nologin'] = true;
+        $list['nologin'] = false;
         $list['dynload'] = true;
         $list['list'] = $this->get_rcf_object_list($path, $page);
 

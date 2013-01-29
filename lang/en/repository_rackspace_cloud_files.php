@@ -53,11 +53,15 @@ $string['instruct'] = 'You can get your <b>API Key</b> from your <a href="http:/
 $string['auth_error'] = 'Authentication unsuccessful!';
 
 /*
- * 
+ *
  */
 $string['repo_auth_fail'] = 'Rackspace Cloud File Repository authentication failure.';
- 
+
 $string['need_api_key'] = 'API key is needed to access this repository.  Contact the administrator to restart the plugin.';
 $string['need_username'] = 'Username is needed to access this repository.  Contact the administrator to restart the plugin.';
 $string['need_cont_name'] = 'The container name is needed to access this repository.  Contact the administrator to restart the plugin.';
- 
+
+$string['upload_instructions'] = 'To upload a new file check the "Upload New File" checkbox otherwise check "Use Existing File" to browse the available files.<br/>To get back to this option just click on the "Rackspace Cloud Files" plugin name on the left of this popup.';
+$string['upload'] = 'Upload New File';
+$string['link'] = 'Use Existing File';
+
