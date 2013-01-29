@@ -172,6 +172,7 @@ class repository_rackspace_cloud_files extends repository {
         $ret['nologin'] = true;
         $ret['list'] = array();
 
+        // Initialize the connection if it is not up to date
         if (empty($this->container)) {
             $this->init_connection();
         }
@@ -179,15 +180,18 @@ class repository_rackspace_cloud_files extends repository {
         // Get all objects in designated path
         $objects = $this->container->get_objects();
 
+        // Initialize the results array and the levenshtein array
         $search_res = array();
+        $levenshtein = 1.0;
 
+        // Compare each each file name to the search text
         foreach ($objects as $obj) {
-            if (preg_match('/^[^.]+\.[a-zA-Z0-9]+$/', $obj->name)) {
-                $search_res[] = array('title'=>$obj->name, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'source'=>$this->container->cdn_uri.'/'.$obj->name, 'url'=>$this->container->cdn_uri.'/'.$obj->name, 'thumbnail'=>$this->container->cdn_uri.'/'.$obj->name);
-            }
-            else {
-                // Add reference as a folder
-//                $search_res[] = array('title'=>$obj->name, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'path'=>$obj->name, 'children'=>array(), 'thumbnail' => $OUTPUT->pix_url(file_folder_icon(90))->out(false));
+            $file_name = end(explode('/', $obj->name));
+            $levenshtein = levenshtein($search_text, substr($file_name, 0, strpos($file_name, '.'))) / ((strlen($search_text) > strlen($file_name))? strlen($search_text) : strlen($file_name));
+            if ($levenshtein < 0.5) {
+                if (preg_match('/^[^.]+\.[a-zA-Z0-9]+$/', $obj->name)) {
+                    $search_res[] = array('title'=>$file_name, 'date'=>$obj->last_modified, 'size'=>$obj->content_length, 'source'=>$this->container->cdn_uri.'/'.$obj->name, 'url'=>$this->container->cdn_uri.'/'.$obj->name, 'thumbnail'=>$this->container->cdn_uri.'/'.$obj->name);
+                }
             }
         }
 
