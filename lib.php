@@ -55,11 +55,6 @@ class repository_rackspace_cloud_files extends repository {
         $this->cdn_enable = get_config('rackspace_cloud_files', 'cdn') == 0;
 
         $this->init_connection();
-
-        $file = 'ver/crab/more/container info.txt';
-        $obj = $this->container->create_object($file);
-        $obj->write($this->container->__toString());
-        $this->container->create_paths($file);
     }
 
     private function init_connection() {
