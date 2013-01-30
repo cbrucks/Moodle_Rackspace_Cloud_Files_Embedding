@@ -17,7 +17,7 @@
 /**
  * Version details
  *
- * @package    repository_rackspace_cloud_files
+ * @package    repository_rackspace_cf
  * @copyright  2013 Chris Brucks
  * @author     Chris Brucks <chris.brucks@rackspace.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -28,5 +28,5 @@ defined('MOODLE_INTERNAL') || die();
 $plugin->version   = 2013012300;
 $plugin->requires  = 2012120300;
 $plugin->maturity  = MATURITY_STABLE;
-$plugin->component = 'repository_rackspace_cloud_files';
+$plugin->component = 'repository_rackspace_cf';
 $plugin->release   = '1.0';
