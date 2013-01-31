@@ -30,8 +30,8 @@ require_once('cloudfiles.php');
  * repository_rackspace_cf class
  *
  * @since 2.0
- * @package    repository_youtube
- * @copyright  2009 Dongsheng Cai {@link http://dongsheng.org}
+ * @package    repository_rackspace_cf
+ * @copyright  2013 Chris Brucks
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
